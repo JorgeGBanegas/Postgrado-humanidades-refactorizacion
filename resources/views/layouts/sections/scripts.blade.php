@@ -7,12 +7,12 @@
  <script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
 --->
 <script src="{{ asset('assets/js/navScript.js') }}"></script>
-
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+@livewireChartsScripts
+
 <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
 
-@livewireChartsScripts
 @yield('vendor-script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
 <script src="{{ asset('assets/js/main.js') }}"></script>

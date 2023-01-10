@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EstadisticasControler;
 use App\Http\Controllers\InscripcionController;
 use App\Http\Controllers\InscripcionCursoController;
 use App\Http\Controllers\PersonaController;
@@ -32,3 +33,8 @@ Route::resource('inscripciones', InscripcionController::class);
 Route::get('inscripciones/Programas/{inscripcione}', [InscripcionController::class, 'showProgram'])->name('inscripciones.showProgram');
 Route::patch('inscripciones/Programas/{inscripcione}', [InscripcionController::class, 'destroyProgram'])->name('inscripciones.destroyProgram');
 Route::resource('inscripcion-curso', InscripcionCursoController::class);
+
+
+/* Estadisiticas */
+Route::get('estadisticas/programas', [EstadisticasControler::class, 'programas'])->name('estadistica.programas');
+Route::get('estadisticas/cursos', [EstadisticasControler::class, 'cursos'])->name('estadistica.cursos');

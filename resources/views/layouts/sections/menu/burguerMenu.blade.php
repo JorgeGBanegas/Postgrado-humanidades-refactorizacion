@@ -42,8 +42,8 @@
 
             <div class='dashboard-nav-dropdown'><a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle"><i class="fa fa-pie-chart"></i> Estadisticas </a>
                 <div class='dashboard-nav-dropdown-menu'>
-                    <a href="" class=" dashboard-nav-dropdown-item">Programas</a>
-                    <a href="" class=" dashboard-nav-dropdown-item">Cursos</a>
+                    <a href="{{route('estadistica.programas')}}" class=" dashboard-nav-dropdown-item">Programas</a>
+                    <a href="{{route('estadistica.cursos')}}" class=" dashboard-nav-dropdown-item">Cursos</a>
                 </div>
             </div>
 

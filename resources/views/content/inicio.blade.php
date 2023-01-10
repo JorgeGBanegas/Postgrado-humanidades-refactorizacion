@@ -4,5 +4,7 @@
 
 @section('content-body')
 
-olii
+<div style="text-align: center;">
+    <img src="{{ asset('assets/img/logo/postgradoHumanidades.jpg') }}" alt="">
+</div>
 @endsection

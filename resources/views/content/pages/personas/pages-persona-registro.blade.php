@@ -32,18 +32,27 @@
                         <label class="col-sm-2 col-form-label" for="basic-default-name">Nombres</label>
                         <div class="col-sm-10">
                             <input name="per_nom" value="{{ old('per_nom') }}" required type="text" class="form-control" id="basic-default-name" placeholder="Nombres" />
+                            @error('per_nom')
+                            <small style="color: red;">{{ $message}}</small>
+                            @enderror
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" for="basic-default-appm">Apellidos</label>
                         <div class="col-sm-10">
                             <input name="per_appm" value="{{ old('per_appm') }}" required type="text" class="form-control" id="basic-default-appm" placeholder="Apellido Paterno - Materno" />
+                            @error('per_appm')
+                            <small style="color: red;">{{ $message}}</small>
+                            @enderror
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" for="basic-default-prof">Profesion</label>
                         <div class="col-sm-10">
                             <input name="per_prof" value="{{ old('per_prof') }}" required type="text" id="basic-default-prof" class="form-control" placeholder="Profesion" />
+                            @error('per_prof')
+                            <small style="color: red;">{{ $message}}</small>
+                            @enderror
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -88,6 +97,9 @@
                         <label class="col-sm-2 col-form-label" for="basic-default-lnac">Lugar de Nacimiento</label>
                         <div class="col-sm-10">
                             <input name="per_lnac" value="{{ old('per_lnac') }}" required type="text" id="basic-default-lnac" class="form-control" placeholder="Lugar de nacimiento" />
+                            @error('per_lnac')
+                            <small style="color: red;">{{ $message}}</small>
+                            @enderror
                         </div>
                     </div>
 

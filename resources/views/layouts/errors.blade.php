@@ -1,15 +1,10 @@
-<div style="display: flex; justify-content: center;">
-    <div style="position: absolute;" class="bs-toast toast fade show bg-danger " role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <i class='bx bx-bell me-2'></i>
-            <div class="me-auto fw-semibold">Ah ocurrido un error</div>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        @foreach($errors->all() as $error)
-        <div class="toast-body">
-            {{ $error }}
-        </div>
+@if($errors->any())
 
-        @endforeach
-    </div>
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Ups!!! Ocurrio un error: </strong>
+    @foreach($errors->all() as $error)
+    {{ $error }}
+    @endforeach
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
+@endif

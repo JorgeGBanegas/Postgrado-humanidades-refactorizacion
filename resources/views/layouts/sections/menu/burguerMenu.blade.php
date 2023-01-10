@@ -30,7 +30,7 @@
                 </div>
             </div>
 
-            <a href="" class="dashboard-nav-item"><i class="fas fa-money-bill-wave"></i>Pagos</a>
+            <a href="{{route('pagos.index')}}" class="dashboard-nav-item"><i class="fas fa-money-bill-wave"></i>Pagos</a>
 
 
             <div class='dashboard-nav-dropdown'><a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle"><i class="fas fa-certificate"></i> Certificados </a>

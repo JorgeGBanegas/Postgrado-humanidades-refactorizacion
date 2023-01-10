@@ -5,6 +5,8 @@ use App\Http\Controllers\CertificadoProgramaController;
 use App\Http\Controllers\EstadisticasControler;
 use App\Http\Controllers\InscripcionController;
 use App\Http\Controllers\InscripcionCursoController;
+use App\Http\Controllers\PagoController;
+use App\Http\Controllers\PagosController;
 use App\Http\Controllers\PersonaController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -44,3 +46,19 @@ Route::get('estadisticas/cursos', [EstadisticasControler::class, 'cursos'])->nam
 /** Certificados */
 Route::resource('certificados-programa', CertificadoProgramaController::class);
 Route::resource('certificados-curso', CertificadoCursoController::class);
+
+/** Pagos */
+
+Route::resource('pagos', PagosController::class);
+Route::get('pagos/create/{planPago}', [PagosController::class, 'create'])->name('pagos.create');
+Route::get('pagos/delete/{planPago}', [PagosController::class, 'delete'])->name('pagos.delete');
+Route::patch('pagos/update/{planPago}', [PagosController::class, 'updatePlan'])->name('pagos.updatePlan');
+
+
+Route::resource('pago', PagoController::class);
+Route::post('pago/{planPago}', [PagoController::class, 'store'])->name('pago.store');
+Route::get('pago/create/{planPago}/{tipo}', [PagoController::class, 'create'])->name('pago.create');
+Route::patch('pago/pagar/{pago}', [PagoController::class, 'updateEstado'])->name('pago.updateEstado');
+
+
+Route::post('pago/udpate/{planPago}', [PagoController::class, 'updatePago'])->name('pago.updatePago');

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CertificadoCursoController;
+use App\Http\Controllers\CertificadoProgramaController;
 use App\Http\Controllers\EstadisticasControler;
 use App\Http\Controllers\InscripcionController;
 use App\Http\Controllers\InscripcionCursoController;
@@ -38,3 +40,7 @@ Route::resource('inscripcion-curso', InscripcionCursoController::class);
 /* Estadisiticas */
 Route::get('estadisticas/programas', [EstadisticasControler::class, 'programas'])->name('estadistica.programas');
 Route::get('estadisticas/cursos', [EstadisticasControler::class, 'cursos'])->name('estadistica.cursos');
+
+/** Certificados */
+Route::resource('certificados-programa', CertificadoProgramaController::class);
+Route::resource('certificados-curso', CertificadoCursoController::class);

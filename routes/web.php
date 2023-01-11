@@ -42,7 +42,7 @@ Route::get("/register", [RegisterController::class, 'showRegistrationForm'])->na
 Route::post("/register", [RegisterController::class, 'store'])->name('register');
 
 
-/* Personas */
+/* Personas verificado con roles*/
 Route::resource('personas', PersonaController::class)->middleware('auth');
 
 Route::resource('inscripciones', InscripcionController::class);
@@ -55,11 +55,11 @@ Route::resource('inscripcion-curso', InscripcionCursoController::class);
 Route::get('estadisticas/programas', [EstadisticasControler::class, 'programas'])->name('estadistica.programas');
 Route::get('estadisticas/cursos', [EstadisticasControler::class, 'cursos'])->name('estadistica.cursos');
 
-/** Certificados */
+/** Certificados verificado con roles*/
 Route::resource('certificados-programa', CertificadoProgramaController::class);
 Route::resource('certificados-curso', CertificadoCursoController::class);
 
-/** Pagos */
+/** Pagos verificado con roles*/
 
 Route::resource('pagos', PagosController::class);
 Route::get('pagos/create/{planPago}', [PagosController::class, 'create'])->name('pagos.create');

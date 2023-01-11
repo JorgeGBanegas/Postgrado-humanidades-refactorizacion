@@ -33,8 +33,8 @@
                         <td>{{ $user -> roles()->first()->name}}</td>
                         <td>
                             <div class="d-flex">
-                                <a style="margin: 2px;" href="#" class="btn btn-warning btn-sm">Editar</a>
-                                <form action="#" method="POST">
+                                <a style="margin: 2px;" href="{{route('user.edit', $user->id)}}" class="btn btn-warning btn-sm">Editar</a>
+                                <form action="{{route('user.delete', $user->id)}}" method="POST">
                                     @csrf()
                                     @method('DELETE')
                                     <button type="submit" style="margin: 2px;" class="btn btn-danger btn-sm">Eliminar</button>

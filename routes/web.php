@@ -77,3 +77,6 @@ Route::post('pago/udpate/{planPago}', [PagoController::class, 'updatePago'])->na
 
 /**Users */
 Route::get('/users', [UserController::class, 'index'])->name('user.index');
+Route::get('/users/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
+Route::patch('/users/update/{user}', [UserController::class, 'update'])->name('user.update');
+Route::delete('/users/delete/{user}', [UserController::class, 'delete'])->name('user.delete');

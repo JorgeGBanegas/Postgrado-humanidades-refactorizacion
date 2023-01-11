@@ -21,7 +21,7 @@
                         <label class="col-sm-2 col-form-label" for="basic-default-name">Nombres</label>
                         <div class="col-sm-10">
                             <input name="name" value="{{ old('name') }}" required type="text" class="form-control" placeholder="Nombres" />
-                            @error('names')
+                            @error('name')
                             <small style="color: red;">{{ $message}}</small>
                             @enderror
                         </div>
@@ -83,7 +83,7 @@
 
                     <div class="d-flex">
                         <button style="margin: 3px;" type="submit" class="btn btn-primary">Registrar</button>
-                        <a style="margin: 3px;" class="btn btn-danger" href="{{route('personas.index')}}">Cancelar</a>
+                        <a style="margin: 3px;" class="btn btn-danger" href="{{route('user.index')}}">Cancelar</a>
                     </div>
                 </form>
             </div>

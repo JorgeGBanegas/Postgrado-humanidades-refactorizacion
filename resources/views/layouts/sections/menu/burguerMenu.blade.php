@@ -57,8 +57,9 @@
                 </div>
             </div>
 
+            @if(@Auth::user()->hasRole(config('variables.rol_admin')))
             <a href="{{route('user.index')}}" class="dashboard-nav-item"><i class="fas fa-users"></i>Usuarios</a>
-
+            @endif
         </nav>
     </div>
     <div class='dashboard-app'>

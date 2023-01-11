@@ -51,7 +51,7 @@ Route::patch('inscripciones/Programas/{inscripcione}', [InscripcionController::c
 Route::resource('inscripcion-curso', InscripcionCursoController::class);
 
 
-/* Estadisiticas */
+/* Estadisiticas verificado con roles*/
 Route::get('estadisticas/programas', [EstadisticasControler::class, 'programas'])->name('estadistica.programas');
 Route::get('estadisticas/cursos', [EstadisticasControler::class, 'cursos'])->name('estadistica.cursos');
 
@@ -76,7 +76,7 @@ Route::patch('pago/pagar/{pago}', [PagoController::class, 'updateEstado'])->name
 Route::post('pago/udpate/{planPago}', [PagoController::class, 'updatePago'])->name('pago.updatePago');
 
 
-/**Users */
+/**Users verificado con roles*/
 Route::get('/users', [UserController::class, 'index'])->name('user.index');
 Route::get('/users/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
 Route::patch('/users/update/{user}', [UserController::class, 'update'])->name('user.update');

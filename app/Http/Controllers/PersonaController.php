@@ -8,6 +8,7 @@ use App\Models\Persona;
 use App\Models\TipoUsuario;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PersonaController extends Controller
 {
@@ -18,10 +19,7 @@ class PersonaController extends Controller
      */
     public function index()
     {
-        $personas = Persona::join("tipo_usuario", "persona.per_tipo", "=", "tipo_usuario.tipo_us_id")
-            ->paginate(5);
-        //return $personas;
-        return view('content.pages.personas.pages-persona', ['listaPersonas' => $personas]);
+        return view('content.pages.personas.pages-persona');
     }
 
     /**
@@ -31,8 +29,22 @@ class PersonaController extends Controller
      */
     public function create()
     {
-        $tipos = TipoUsuario::whereNotIn('tipo_us_id', [3])->get();
+        $tipos = $this->obtenerTipos();
         return view('content.pages.personas.pages-persona-registro', ['listaTipos' => $tipos]);
+    }
+
+    private function obtenerTipos()
+    {
+        $user = Auth::user();
+        $tipos = null;
+        if ($user->hasRole(config('variables.rol_admin'))) {
+            $tipos = TipoUsuario::whereNotIn('tipo_us_id', [3])->get();
+        } else if ($user->hasRole(config('variables.rol_admin_progr'))) {
+            $tipos = TipoUsuario::where('tipo_us_id', [2])->get();
+        } else if ($user->hasRole(config('variables.rol_admin_inscrip'))) {
+            $tipos = TipoUsuario::where('tipo_us_id', [1])->get();
+        }
+        return $tipos;
     }
 
     /**
@@ -81,7 +93,7 @@ class PersonaController extends Controller
     public function edit($id)
     {
         $persona = Persona::find($id);
-        $tipos = TipoUsuario::whereNotIn('tipo_us_id', [3])->get();
+        $tipos = $this->obtenerTipos();
         return view('content.pages.personas.pages-persona-update', ['listaTipos' => $tipos], ['persona' => $persona]);
     }
 

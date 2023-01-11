@@ -23,10 +23,18 @@
 
             <div class='dashboard-nav-dropdown'><a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle"><i class="fas fa-user-graduate"></i> Registros </a>
                 <div class='dashboard-nav-dropdown-menu'>
+
+                    @if(@Auth::user()->hasRole(config('variables.rol_admin')))
                     <a href="{{route('personas.index')}}" class="dashboard-nav-dropdown-item">Alumno/Docente</a>
                     <a href="{{route('inscripciones.index')}}" class="dashboard-nav-dropdown-item">Inscribir a Programa</a>
                     <a href="{{route('inscripcion-curso.index')}}" class="dashboard-nav-dropdown-item">Inscribir a Curso</a>
-
+                    @elseif(@Auth::user()->hasRole(config('variables.rol_admin_progr')))
+                    <a href="{{route('personas.index')}}" class="dashboard-nav-dropdown-item">Docentes</a>
+                    @elseif(@Auth::user()->hasRole(config('variables.rol_admin_inscrip')))
+                    <a href="{{route('personas.index')}}" class="dashboard-nav-dropdown-item">Alumnos</a>
+                    <a href="{{route('inscripciones.index')}}" class="dashboard-nav-dropdown-item">Inscribir a Programa</a>
+                    <a href="{{route('inscripcion-curso.index')}}" class="dashboard-nav-dropdown-item">Inscribir a Curso</a>
+                    @endif
                 </div>
             </div>
 

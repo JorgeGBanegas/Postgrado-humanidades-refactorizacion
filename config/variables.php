@@ -3,6 +3,9 @@
 return [
   "creatorName" => "Grupo11SC",
   "creatorUrl" => "https://themeselection.com",
+  "rol_admin" => "administrador",
+  "rol_admin_progr" => "administrativo_programas",
+  "rol_admin_inscrip" => "administrativo_inscripciones",
   "templateName" => "Unidad de Postgrado Facultad de Humanidades UAGRM",
   "templateDescription" => "Most Powerful & Comprehensive Bootstrap 5 HTML Admin Dashboard Template built for developers!",
   "templateKeyword" => "dashboard, bootstrap 5 dashboard, bootstrap 5 design, bootstrap 5, bootstrap 5 free, free admin template",

@@ -43,7 +43,8 @@ Route::post("/register", [RegisterController::class, 'store'])->name('register')
 
 
 /* Personas */
-Route::resource('personas', PersonaController::class);
+Route::resource('personas', PersonaController::class)->middleware('auth');
+
 Route::resource('inscripciones', InscripcionController::class);
 Route::get('inscripciones/Programas/{inscripcione}', [InscripcionController::class, 'showProgram'])->name('inscripciones.showProgram');
 Route::patch('inscripciones/Programas/{inscripcione}', [InscripcionController::class, 'destroyProgram'])->name('inscripciones.destroyProgram');

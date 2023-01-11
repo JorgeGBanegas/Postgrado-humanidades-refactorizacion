@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class InscripcionCursoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:' . config('variables.rol_admin') . '|' . config('variables.rol_admin_inscrip'));
+    }
     /**
      * Display a listing of the resource.
      *

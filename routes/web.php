@@ -10,6 +10,8 @@ use App\Http\Controllers\InscripcionCursoController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\PagosController;
 use App\Http\Controllers\PersonaController;
+use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -71,3 +73,7 @@ Route::patch('pago/pagar/{pago}', [PagoController::class, 'updateEstado'])->name
 
 
 Route::post('pago/udpate/{planPago}', [PagoController::class, 'updatePago'])->name('pago.updatePago');
+
+
+/**Users */
+Route::get('/users', [UserController::class, 'index'])->name('user.index');

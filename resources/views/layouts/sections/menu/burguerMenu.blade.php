@@ -47,6 +47,8 @@
                 </div>
             </div>
 
+            <a href="{{route('user.index')}}" class="dashboard-nav-item"><i class="fas fa-users"></i>Usuarios</a>
+
         </nav>
     </div>
     <div class='dashboard-app'>

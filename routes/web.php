@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CertificadoCursoController;
 use App\Http\Controllers\CertificadoProgramaController;
 use App\Http\Controllers\EstadisticasControler;
@@ -29,8 +31,13 @@ Route::get('/', function () {
     return redirect("/home");
 });
 
-Auth::routes();
+//Auth::routes();
+Route::get("/login", [LoginController::class, 'showLoginForm'])->name('showLoginForm');
+Route::post("/login", [LoginController::class, 'login'])->name('login');
+Route::post("/logout", [LoginController::class, 'logout'])->name('logout');
 
+Route::get("/register", [RegisterController::class, 'showRegistrationForm'])->name('showRegistrationForm');
+Route::post("/register", [RegisterController::class, 'register'])->name('register');
 
 
 /* Personas */

@@ -50,9 +50,38 @@
         </nav>
     </div>
     <div class='dashboard-app'>
-        <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
+        <header class='dashboard-toolbar' style="display: flex;">
+            <a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a>
+            <div style="margin-right: 10px; margin-top: 10px;">
+                <h6> Rol: {{auth()->user()->roles()->first()->name}}</h6>
+            </div>
+            <div class="d-flex" style="margin-left: auto;">
+
+                <div style="margin-right: 10px; margin-top: 10px;">
+                    <h6> {{auth()->user()->name. " ".auth()->user()->last_name}}</h6>
+                </div>
+                <div class="">
+                    <div class="demo-inline-spacing">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false"><i class="bx bx-dots-vertical-rounded"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <form action="{{route('logout')}}" method="POST">
+                                    @csrf
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="this.closest('form').submit()">
+                                            Cerrar Sesion
+                                        </a>
+                                    </li>
+
+                                </form>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
         <div class='dashboard-content'>
-            <div class='container' style="margin-bottom: 40px;">
+            <div class='container' style=" margin-bottom: 40px;">
                 @yield('content-body')
             </div>
         </div>

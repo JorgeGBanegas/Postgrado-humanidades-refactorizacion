@@ -27,11 +27,11 @@ App::setLocale("es");
 
 Route::get('/home', function () {
     return view('content.inicio');
-});
+})->middleware('auth');
 
 Route::get('/', function () {
     return redirect("/home");
-});
+})->middleware('auth');;
 
 //Auth::routes();
 Route::get("/login", [LoginController::class, 'showLoginForm'])->name('showLoginForm');

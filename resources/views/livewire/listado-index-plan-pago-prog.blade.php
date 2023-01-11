@@ -87,8 +87,9 @@
                             <div class="d-flex">
                                 <a style="margin: 2px;" href="{{route('pagos.show', $plan->plan_pago_nro)}}" class="btn btn-primary btn-sm">Ver</a>
                                 <a style="margin: 2px;" href="{{route('pagos.edit', $plan->plan_pago_nro)}}" class=" btn btn-warning btn-sm">Editar</a>
+                                @if(@Auth::user()->hasRole(config('variables.rol_admin')))
                                 <a style="margin: 2px;" href="{{route('pagos.delete', $plan->plan_pago_nro)}}" class="btn btn-danger btn-sm">Eliminar</a>
-
+                                @endif
                             </div>
                         </td>
                     </tr>

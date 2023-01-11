@@ -8,6 +8,7 @@ use App\Models\Pago;
 use App\Models\PlanDePago;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -17,7 +18,15 @@ class PagosController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
+     * 
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:' . config('variables.rol_admin') . '|' . config('variables.rol_admin_inscrip'));
+    }
+
+
     public function index()
     {
         return view('content.pages.pagos.pages-pagos');
@@ -171,11 +180,11 @@ class PagosController extends Controller
     public function delete($id)
     {
         try {
-            $plan = PlanDePago::find($id);
+            $plan = PlanDePago::findOrFail($id);
             $plan->delete();
             return to_route('pagos.index');
         } catch (Exception $e) {
-            return redirect()->back()->withErrors(['er' => 'Ocurrio un error, verifique su conexion']);
+            return redirect()->back()->withErrors(['er' => 'Ocurrio un error, el plan o el pago no existen']);
         }
     }
 }

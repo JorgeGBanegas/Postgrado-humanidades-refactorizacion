@@ -42,7 +42,7 @@
                     <!-- Password -->
                     <div class="input-group input-group-lg" style="margin-bottom: 20px;">
                         <span id=" basic-default-password2" class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                        <input required name="password" type=" password" class="form-control input-group-lg @error('password') is-invalid @enderror" id="basic-default-password12" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="basic-default-password2" />
+                        <input required name="password" type="password" class="form-control input-group-lg @error('password') is-invalid @enderror" id="basic-default-password12" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="basic-default-password2" />
                         @error('password')
                         <small style="color: red;">{{ $message}}</small>
                         @enderror

@@ -5,7 +5,7 @@
 
 
     <!-- Basic Bootstrap Table -->
-    <a style="margin-bottom: 25px;" href="" class="btn btn-primary">Registrar</a>
+    <a style="margin-bottom: 25px;" href="{{route('programas.create')}}" class="btn btn-primary">Registrar</a>
 
     <!--- Listado--->
     <div class="card">

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProgramaRequest;
+use App\Models\Programa;
 use Illuminate\Http\Request;
 
 class ProgramaController extends Controller
@@ -20,13 +22,14 @@ class ProgramaController extends Controller
 
     public function create()
     {
-        //
+        return view('content.pages.programas.pages-programas-registros');
     }
 
 
-    public function store(Request $request)
+    public function store(StoreProgramaRequest $request)
     {
-        //
+        Programa::create($request->all());
+        return to_route('programas.index');
     }
 
     public function show($id)

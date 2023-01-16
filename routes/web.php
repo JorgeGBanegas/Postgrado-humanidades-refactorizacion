@@ -10,6 +10,7 @@ use App\Http\Controllers\InscripcionCursoController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\PagosController;
 use App\Http\Controllers\PersonaController;
+use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Support\Facades\App;
@@ -81,3 +82,8 @@ Route::get('/users', [UserController::class, 'index'])->name('user.index');
 Route::get('/users/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
 Route::patch('/users/update/{user}', [UserController::class, 'update'])->name('user.update');
 Route::delete('/users/delete/{user}', [UserController::class, 'delete'])->name('user.delete');
+
+
+/**Gestionar Programas */
+
+Route::resource('programas', ProgramaController::class);

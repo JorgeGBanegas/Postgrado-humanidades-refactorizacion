@@ -78,7 +78,8 @@ class ProgramaController extends Controller
 
     public function show($id)
     {
-        //
+        $programa = Programa::findOrFail($id);
+        return view('content.pages.programas.pages-programas-view', ['programa' => $programa]);
     }
 
     public function edit($id)

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProgramaRequest;
+use App\Models\ModuloPrograma;
+use App\Models\Persona;
 use App\Models\Programa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProgramaController extends Controller
 {
@@ -22,14 +25,55 @@ class ProgramaController extends Controller
 
     public function create()
     {
-        return view('content.pages.programas.pages-programas-registros');
+        $docentes = Persona::where('per_tipo', '=', '2')->get();
+        return view('content.pages.programas.pages-programas-registros', ['docentes' => $docentes]);
     }
 
 
     public function store(StoreProgramaRequest $request)
     {
-        Programa::create($request->all());
-        return to_route('programas.index');
+
+        //Iniciar una transacción
+        DB::beginTransaction();
+
+        try {
+            // Guardar el programa en la base de datos
+            $programa = Programa::create([
+                'program_nom' => $request->input('program_nom'),
+                'program_precio' => $request->input('program_precio'),
+                'program_modalidad' => $request->input('program_modalidad'),
+                'program_tipo' => $request->input('program_tipo'),
+            ]);
+
+            $listaDeModulos = json_decode($request->modulos, true);
+            // Guardar los módulos en la base de datos
+            foreach ($listaDeModulos as $modulo) {
+                $nro = $modulo['nro'];
+                $nombre = $modulo['nombre'];
+                $docente = $modulo['docente'];
+                $programaId = $programa->program_id;
+                $existeModulo = ModuloPrograma::where('mod_program_nom', '=', $nombre)
+                    ->where('programa', '=', $programaId)
+                    ->where('docente', '=', $docente)
+                    ->get();
+                if (sizeof($existeModulo) == 0) {
+                    ModuloPrograma::create([
+                        'mod_program_nro' => $nro,
+                        'mod_program_nom' => $nombre,
+                        'docente' => $docente,
+                        'programa' => $programaId
+                    ]);
+                }
+            }
+
+            // Confirmar la transacción
+            DB::commit();
+            return to_route('programas.index');
+        } catch (\Exception $e) {
+            // Realizar un rollback
+            DB::rollback();
+            return redirect()->back()->withErrors(['err' => $e->getMessage()]);
+        }
     }
 
     public function show($id)

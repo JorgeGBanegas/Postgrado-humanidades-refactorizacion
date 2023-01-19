@@ -34,7 +34,7 @@
                         <td>
                             <div class="d-flex">
                                 <a style="margin: 2px;" href="{{route('programas.show', $programa->program_id)}}" class="btn btn-primary btn-sm">Ver</a>
-                                <a style="margin: 2px;" href="" class="btn btn-warning btn-sm">Editar</a>
+                                <a style="margin: 2px;" href="{{route('programas.edit', $programa->program_id)}}" class="btn btn-warning btn-sm">Editar</a>
                                 <form action="" method="POST">
                                     @csrf()
                                     @method('DELETE')

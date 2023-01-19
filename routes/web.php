@@ -7,6 +7,7 @@ use App\Http\Controllers\CertificadoProgramaController;
 use App\Http\Controllers\EstadisticasControler;
 use App\Http\Controllers\InscripcionController;
 use App\Http\Controllers\InscripcionCursoController;
+use App\Http\Controllers\ModuloProgramaController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\PagosController;
 use App\Http\Controllers\PersonaController;
@@ -87,3 +88,5 @@ Route::delete('/users/delete/{user}', [UserController::class, 'delete'])->name('
 /**Gestionar Programas */
 
 Route::resource('programas', ProgramaController::class);
+
+Route::post('modulos', [ModuloProgramaController::class, 'store'])->name('modulos.store');

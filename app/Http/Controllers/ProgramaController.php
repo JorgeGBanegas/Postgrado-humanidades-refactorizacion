@@ -8,6 +8,8 @@ use App\Models\Persona;
 use App\Models\Programa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ProgramaController extends Controller
 {
@@ -84,12 +86,34 @@ class ProgramaController extends Controller
 
     public function edit($id)
     {
-        //
+        $programa = Programa::findOrFail($id);
+        $docentes = Persona::where('per_tipo', '=', 2)->get();
+        return view('content.pages.programas.pages-programas-edit', ['programa' => $programa, 'docentes' => $docentes]);
     }
 
     public function update(Request $request, $id)
     {
-        //
+        ///dd($request);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'program_nom'  => 'required | string | unique:programa,program_nom,' . $id . ',program_id',
+                'program_precio'  => 'required | numeric | min:0',
+                'program_tipo' => [
+                    'required',
+                    Rule::in(["diplomado", "maestria", "especialidad", "doctorado"])
+                ],
+                'program_modalidad' => [
+                    'required',
+                    Rule::in(["presencial", "semipresencial", "virtual"])
+                ],
+            ]
+        )->validate();
+
+        $programa = Programa::findOrFail($id);
+
+        $programa->update($validator);
+        return to_route('programas.index');
     }
 
     public function destroy($id)

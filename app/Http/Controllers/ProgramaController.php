@@ -6,6 +6,8 @@ use App\Http\Requests\StoreProgramaRequest;
 use App\Models\ModuloPrograma;
 use App\Models\Persona;
 use App\Models\Programa;
+use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -118,6 +120,17 @@ class ProgramaController extends Controller
 
     public function destroy($id)
     {
-        //
+        try {
+            $programa = Programa::findOrFail($id);
+            $programa->delete();
+            return to_route('programas.index');
+        } catch (QueryException $e) {
+            if ($e->getCode() == "23503") {
+                return redirect()->back()->withErrors(['err' => 'No puedes eliminar el programa, hay registros que dependen de el']);
+            }
+            return redirect()->back()->withErrors(['err' => 'Error de conexion intente mas tarde']);
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors(['err' => $e->getMessage()]);
+        }
     }
 }

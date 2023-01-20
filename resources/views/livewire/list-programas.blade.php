@@ -35,7 +35,7 @@
                             <div class="d-flex">
                                 <a style="margin: 2px;" href="{{route('programas.show', $programa->program_id)}}" class="btn btn-primary btn-sm">Ver</a>
                                 <a style="margin: 2px;" href="{{route('programas.edit', $programa->program_id)}}" class="btn btn-warning btn-sm">Editar</a>
-                                <form action="" method="POST">
+                                <form action="{{route('programas.destroy', $programa->program_id)}}" method="POST">
                                     @csrf()
                                     @method('DELETE')
                                     <button type="submit" style="margin: 2px;" class="btn btn-danger btn-sm">Eliminar</button>

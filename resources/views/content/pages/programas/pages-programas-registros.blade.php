@@ -82,7 +82,7 @@
                     </div>
                     <div class="d-flex">
                         <button style="margin: 10px;" type="submit" class="btn btn-primary">Registrar</button>
-                        <a style="margin: 10px;" class="btn btn-danger" href="">Cancelar</a>
+                        <a style="margin: 10px;" class="btn btn-danger" href="{{route('programas.index')}}">Cancelar</a>
                     </div>
                 </form>
 

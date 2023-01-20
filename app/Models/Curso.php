@@ -37,9 +37,6 @@ class Curso extends Model
 		'curs_duracion' => 'int'
 	];
 
-	protected $dates = [
-		'curs_fini'
-	];
 
 	protected $fillable = [
 		'curs_nom',

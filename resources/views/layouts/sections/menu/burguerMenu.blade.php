@@ -25,6 +25,10 @@
             <a href="{{route('programas.index')}}" class="dashboard-nav-item"><i class="fas fa-chalkboard"></i>Gest. Programas</a>
             @endif
 
+            @if(@Auth::user()->hasRole(config('variables.rol_admin')) || @Auth::user()->hasRole(config('variables.rol_admin_progr')))
+            <a href="{{route('cursos.index')}}" class="dashboard-nav-item"><i class="fas fa-award"></i>Gest. Cursos</a>
+            @endif
+
             <div class='dashboard-nav-dropdown'><a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle"><i class="fas fa-user-graduate"></i> Registros </a>
                 <div class='dashboard-nav-dropdown-menu'>
 

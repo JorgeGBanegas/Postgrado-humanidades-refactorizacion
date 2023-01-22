@@ -35,10 +35,6 @@ class GrupoPrograma extends Model
 		'programa' => 'int'
 	];
 
-	protected $dates = [
-		'grup_program_fini'
-	];
-
 	protected $fillable = [
 		'grup_program_cod',
 		'grup_program_vers',
@@ -47,7 +43,7 @@ class GrupoPrograma extends Model
 		'programa'
 	];
 
-	public function programa()
+	public function program()
 	{
 		return $this->belongsTo(Programa::class, 'programa');
 	}

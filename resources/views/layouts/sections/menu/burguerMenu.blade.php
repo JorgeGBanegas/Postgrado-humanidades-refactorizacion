@@ -1,3 +1,6 @@
+@guest
+{{ redirect()->route('login') }}
+@endguest
 @extends('layouts/commonMaster' )
 
 @section('layoutContent')
@@ -54,6 +57,16 @@
             <div class='dashboard-nav-dropdown'><a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle"><i class="fas fa-certificate"></i> Certificados </a>
                 <div class='dashboard-nav-dropdown-menu'>
                     <a href="{{route('certificados-programa.index')}}" class="dashboard-nav-dropdown-item">Programas</a>
+                    <a href="{{route('certificados-curso.index')}}" class="dashboard-nav-dropdown-item">Cursos</a>
+                </div>
+            </div>
+            @endif
+
+
+            @if(@Auth::user()->hasRole(config('variables.rol_admin')) || @Auth::user()->hasRole(config('variables.rol_admin_inscrip')))
+            <div class='dashboard-nav-dropdown'><a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle"><i class="far fa-calendar-alt"></i> Gest. Horarios </a>
+                <div class='dashboard-nav-dropdown-menu'>
+                    <a href="{{route('horarios-programas.index')}}" class="dashboard-nav-dropdown-item">Programas</a>
                     <a href="{{route('certificados-curso.index')}}" class="dashboard-nav-dropdown-item">Cursos</a>
                 </div>
             </div>

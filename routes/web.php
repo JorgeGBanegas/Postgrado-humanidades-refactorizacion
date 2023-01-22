@@ -6,6 +6,7 @@ use App\Http\Controllers\CertificadoCursoController;
 use App\Http\Controllers\CertificadoProgramaController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\EstadisticasControler;
+use App\Http\Controllers\HorarioProgramaController;
 use App\Http\Controllers\InscripcionController;
 use App\Http\Controllers\InscripcionCursoController;
 use App\Http\Controllers\ModuloProgramaController;
@@ -95,3 +96,7 @@ Route::post('modulos', [ModuloProgramaController::class, 'store'])->name('modulo
 
 /**Gestionar cursos */
 Route::resource('cursos', CursoController::class);
+
+
+/**Gestionar horarios */
+Route::resource('horarios-programas', HorarioProgramaController::class);

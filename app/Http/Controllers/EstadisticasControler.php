@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 
 class EstadisticasControler extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:' . config('variables.rol_admin'));
+    }
 
     public function programas()
     {

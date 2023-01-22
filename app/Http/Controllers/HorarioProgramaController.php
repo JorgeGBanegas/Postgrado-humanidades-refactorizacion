@@ -16,6 +16,13 @@ use Illuminate\Validation\Rule;
 class HorarioProgramaController extends Controller
 {
 
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:' . config('variables.rol_admin') . '|' . config('variables.rol_admin_progr'));
+    }
+
     public function index()
     {
         return view('content.pages.horarios.horario-programa');

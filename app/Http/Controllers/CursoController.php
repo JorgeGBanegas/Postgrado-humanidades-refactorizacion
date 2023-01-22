@@ -38,7 +38,8 @@ class CursoController extends Controller
 
     public function show($id)
     {
-        //
+        $curso = Curso::findOrFail($id);
+        return view('content.pages.cursos.pages-cursos-view', ['curso' => $curso]);
     }
 
     public function edit($id)

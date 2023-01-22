@@ -6,6 +6,7 @@ use App\Http\Controllers\CertificadoCursoController;
 use App\Http\Controllers\CertificadoProgramaController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\EstadisticasControler;
+use App\Http\Controllers\HorarioCursoController;
 use App\Http\Controllers\HorarioProgramaController;
 use App\Http\Controllers\InscripcionController;
 use App\Http\Controllers\InscripcionCursoController;
@@ -100,3 +101,4 @@ Route::resource('cursos', CursoController::class);
 
 /**Gestionar horarios */
 Route::resource('horarios-programas', HorarioProgramaController::class);
+Route::resource('horarios-cursos', HorarioCursoController::class);

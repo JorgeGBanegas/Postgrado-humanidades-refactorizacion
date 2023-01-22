@@ -36,7 +36,7 @@ class GrupoCurso extends Model
 		'curso'
 	];
 
-	public function curso()
+	public function curs()
 	{
 		return $this->belongsTo(Curso::class, 'curso');
 	}

@@ -52,3 +52,7 @@
 
 
 @endsection
+
+@section('visitas')
+<code>Visitas: {{$visitas->contador}}</code>
+@endsection

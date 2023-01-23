@@ -6,6 +6,7 @@ use App\Http\Requests\StoreProgramaRequest;
 use App\Models\ModuloPrograma;
 use App\Models\Persona;
 use App\Models\Programa;
+use App\Models\Visitas;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -22,15 +23,30 @@ class ProgramaController extends Controller
         $this->middleware('role:' . config('variables.rol_admin') . '|' . config('variables.rol_admin_progr'));
     }
 
+    public function updateVisitCount($path)
+    {
+        $visit = Visitas::firstOrNew(['ruta' => $path]);
+        $visit->increment('contador');
+        $visit->save();
+    }
+
     public function index()
     {
-        return view('content.pages.programas.pages-programas');
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
+        return view('content.pages.programas.pages-programas', ['visitas' => $visitas]);
     }
 
     public function create()
     {
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
         $docentes = Persona::where('per_tipo', '=', '2')->get();
-        return view('content.pages.programas.pages-programas-registros', ['docentes' => $docentes]);
+        return view('content.pages.programas.pages-programas-registros', ['docentes' => $docentes, 'visitas' => $visitas]);
     }
 
 
@@ -82,15 +98,27 @@ class ProgramaController extends Controller
 
     public function show($id)
     {
+
+        $path = request()->path();
+        $basepath = preg_replace("/\/[0-9]+/", "/*", $path);
+        $this->updateVisitCount($basepath);
+        $visitas = Visitas::where('ruta', $basepath)->first();
+
         $programa = Programa::findOrFail($id);
-        return view('content.pages.programas.pages-programas-view', ['programa' => $programa]);
+        return view('content.pages.programas.pages-programas-view', ['programa' => $programa, 'visitas' => $visitas]);
     }
 
     public function edit($id)
     {
         $programa = Programa::findOrFail($id);
         $docentes = Persona::where('per_tipo', '=', 2)->get();
-        return view('content.pages.programas.pages-programas-edit', ['programa' => $programa, 'docentes' => $docentes]);
+
+        $path = request()->path();
+        $basepath = preg_replace('/\/\d+/', '/*', $path);
+        $this->updateVisitCount($basepath);
+        $visitas = Visitas::where('ruta', $basepath)->first();
+
+        return view('content.pages.programas.pages-programas-edit', ['programa' => $programa, 'docentes' => $docentes, 'visitas' => $visitas]);
     }
 
     public function update(Request $request, $id)

@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CertificadoCursoController;
 use App\Http\Controllers\CertificadoProgramaController;
 use App\Http\Controllers\CursoController;
+use App\Http\Controllers\DescuentosController;
 use App\Http\Controllers\EstadisticasControler;
 use App\Http\Controllers\HorarioCursoController;
 use App\Http\Controllers\HorarioProgramaController;
@@ -102,3 +103,7 @@ Route::resource('cursos', CursoController::class);
 /**Gestionar horarios */
 Route::resource('horarios-programas', HorarioProgramaController::class);
 Route::resource('horarios-cursos', HorarioCursoController::class);
+
+/**Gestionar Descuentos */
+Route::resource('descuentos', DescuentosController::class);
+Route::get('descuentos/status/{descuento}', [DescuentosController::class, 'changeStatus'])->name('descuentos.changeStatus');;

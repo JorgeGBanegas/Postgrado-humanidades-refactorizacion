@@ -7,3 +7,6 @@
 @livewire('list-horarios-programas')
 
 @endsection
+@section('visitas')
+<code>Visitas: {{$visitas->contador}}</code>
+@endsection

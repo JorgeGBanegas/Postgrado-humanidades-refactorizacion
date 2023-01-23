@@ -6,6 +6,7 @@ use App\Http\Requests\StoreGrupoHorarioCursosRequest;
 use App\Models\Curso;
 use App\Models\GrupoCurso;
 use App\Models\HorarioCurso;
+use App\Models\Visitas;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -20,15 +21,30 @@ class HorarioCursoController extends Controller
         $this->middleware('role:' . config('variables.rol_admin') . '|' . config('variables.rol_admin_progr'));
     }
 
+    public function updateVisitCount($path)
+    {
+        $visit = Visitas::firstOrNew(['ruta' => $path]);
+        $visit->increment('contador');
+        $visit->save();
+    }
+
     public function index()
     {
-        return view('content.pages.horarios.horario-curso');
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
+        return view('content.pages.horarios.horario-curso', ['visitas' => $visitas]);
     }
 
     public function create()
     {
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
         $cursos = Curso::get();
-        return view('content.pages.horarios.horario-curso-registro', ['cursos' => $cursos]);
+        return view('content.pages.horarios.horario-curso-registro', ['cursos' => $cursos, 'visitas' => $visitas]);
     }
 
     public function store(StoreGrupoHorarioCursosRequest $request)
@@ -79,14 +95,24 @@ class HorarioCursoController extends Controller
 
     public function show($id)
     {
+        $path = request()->path();
+        $basepath = preg_replace("/\/[0-9]+/", "/*", $path);
+        $this->updateVisitCount($basepath);
+        $visitas = Visitas::where('ruta', $basepath)->first();
+
         $grupoHorario = GrupoCurso::findOrFail($id);
-        return view('content.pages.horarios.horario-curso-view', ['grupoHorario' => $grupoHorario]);
+        return view('content.pages.horarios.horario-curso-view', ['grupoHorario' => $grupoHorario, 'visitas' => $visitas]);
     }
     public function edit($id)
     {
+        $path = request()->path();
+        $basepath = preg_replace('/\/\d+/', '/*', $path);
+        $this->updateVisitCount($basepath);
+        $visitas = Visitas::where('ruta', $basepath)->first();
+
         $grupoHorario = GrupoCurso::findOrFail($id);
         $cursos = Curso::get();
-        return view('content.pages.horarios.horario-curso-update', ['grupoHorario' => $grupoHorario, 'cursos' => $cursos]);
+        return view('content.pages.horarios.horario-curso-update', ['grupoHorario' => $grupoHorario, 'cursos' => $cursos, 'visitas' => $visitas]);
     }
 
     public function update(Request $request, $id)

@@ -6,6 +6,7 @@ use App\Http\Requests\StoreGrupoHorarioProgramasRequest;
 use App\Models\GrupoPrograma;
 use App\Models\HorarioPrograma;
 use App\Models\Programa;
+use App\Models\Visitas;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -23,15 +24,30 @@ class HorarioProgramaController extends Controller
         $this->middleware('role:' . config('variables.rol_admin') . '|' . config('variables.rol_admin_progr'));
     }
 
+    public function updateVisitCount($path)
+    {
+        $visit = Visitas::firstOrNew(['ruta' => $path]);
+        $visit->increment('contador');
+        $visit->save();
+    }
+
     public function index()
     {
-        return view('content.pages.horarios.horario-programa');
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
+        return view('content.pages.horarios.horario-programa', ['visitas' => $visitas]);
     }
 
     public function create()
     {
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
         $programas = Programa::get();
-        return view('content.pages.horarios.horario-programa-registro', ['programas' => $programas]);
+        return view('content.pages.horarios.horario-programa-registro', ['programas' => $programas, 'visitas' => $visitas]);
     }
 
     public function store(StoreGrupoHorarioProgramasRequest $request)
@@ -87,14 +103,24 @@ class HorarioProgramaController extends Controller
 
     public function show($id)
     {
+        $path = request()->path();
+        $basepath = preg_replace("/\/[0-9]+/", "/*", $path);
+        $this->updateVisitCount($basepath);
+        $visitas = Visitas::where('ruta', $basepath)->first();
+
         $grupoHorario = GrupoPrograma::findOrFail($id);
-        return view('content.pages.horarios.horario-programa-view', ['grupoHorario' => $grupoHorario]);
+        return view('content.pages.horarios.horario-programa-view', ['grupoHorario' => $grupoHorario, 'visitas' => $visitas]);
     }
     public function edit($id)
     {
+        $path = request()->path();
+        $basepath = preg_replace('/\/\d+/', '/*', $path);
+        $this->updateVisitCount($basepath);
+        $visitas = Visitas::where('ruta', $basepath)->first();
+
         $grupoHorario = GrupoPrograma::findOrFail($id);
         $programas = Programa::get();
-        return view('content.pages.horarios.horario-programa-update', ['grupoHorario' => $grupoHorario, 'programas' => $programas]);
+        return view('content.pages.horarios.horario-programa-update', ['grupoHorario' => $grupoHorario, 'programas' => $programas, 'visitas' => $visitas]);
     }
 
     public function update(Request $request, $id)

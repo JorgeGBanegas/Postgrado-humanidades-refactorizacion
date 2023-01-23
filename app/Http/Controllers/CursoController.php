@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCursosRequest;
 use App\Models\Curso;
+use App\Models\Visitas;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -19,14 +20,30 @@ class CursoController extends Controller
         $this->middleware('role:' . config('variables.rol_admin') . '|' . config('variables.rol_admin_progr'));
     }
 
+    public function updateVisitCount($path)
+    {
+        $visit = Visitas::firstOrNew(['ruta' => $path]);
+        $visit->increment('contador');
+        $visit->save();
+    }
+
     public function index()
     {
-        return view('content.pages.cursos.pages-cursos');
+
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
+        return view('content.pages.cursos.pages-cursos', ['visitas' => $visitas]);
     }
 
     public function create()
     {
-        return view('content.pages.cursos.pages-cursos-registro');
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
+        return view('content.pages.cursos.pages-cursos-registro', ['visitas' => $visitas]);
     }
 
     public function store(StoreCursosRequest $request)
@@ -38,14 +55,24 @@ class CursoController extends Controller
 
     public function show($id)
     {
+        $path = request()->path();
+        $basepath = preg_replace("/\/[0-9]+/", "/*", $path);
+        $this->updateVisitCount($basepath);
+        $visitas = Visitas::where('ruta', $basepath)->first();
+
         $curso = Curso::findOrFail($id);
-        return view('content.pages.cursos.pages-cursos-view', ['curso' => $curso]);
+        return view('content.pages.cursos.pages-cursos-view', ['curso' => $curso, 'visitas' => $visitas]);
     }
 
     public function edit($id)
     {
+        $path = request()->path();
+        $basepath = preg_replace('/\/\d+/', '/*', $path);
+        $this->updateVisitCount($basepath);
+        $visitas = Visitas::where('ruta', $basepath)->first();
+
         $curso = Curso::findOrFail($id);
-        return view('content.pages.cursos.pages-cursos-update', ['curso' => $curso]);
+        return view('content.pages.cursos.pages-cursos-update', ['curso' => $curso, 'visitas' => $visitas]);
     }
 
     public function update(Request $request, $id)

@@ -7,6 +7,7 @@ use App\Http\Controllers\CertificadoProgramaController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\DescuentosController;
 use App\Http\Controllers\EstadisticasControler;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HorarioCursoController;
 use App\Http\Controllers\HorarioProgramaController;
 use App\Http\Controllers\InscripcionController;
@@ -31,13 +32,9 @@ Role::create(['name' => 'administrativo_inscripciones']);
 
 App::setLocale("es");
 
-Route::get('/home', function () {
-    return view('content.inicio');
-})->middleware('auth');
+Route::get('/home', [HomeController::class, 'index']);
 
-Route::get('/', function () {
-    return redirect("/home");
-})->middleware('auth');;
+Route::get('/', [HomeController::class, 'index']);
 
 //Auth::routes();
 Route::get("/login", [LoginController::class, 'showLoginForm'])->name('showLoginForm');
@@ -93,7 +90,6 @@ Route::delete('/users/delete/{user}', [UserController::class, 'delete'])->name('
 
 Route::resource('programas', ProgramaController::class);
 
-Route::post('modulos', [ModuloProgramaController::class, 'store'])->name('modulos.store');
 
 
 /**Gestionar cursos */

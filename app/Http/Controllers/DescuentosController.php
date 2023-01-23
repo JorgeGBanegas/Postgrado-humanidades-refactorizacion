@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreDescuentosRequest;
 use App\Models\Descuento;
 use App\Models\Programa;
+use App\Models\Visitas;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -17,15 +18,30 @@ class DescuentosController extends Controller
         $this->middleware('role:' . config('variables.rol_admin') . '|' . config('variables.rol_admin_progr'));
     }
 
+    public function updateVisitCount($path)
+    {
+        $visit = Visitas::firstOrNew(['ruta' => $path]);
+        $visit->increment('contador');
+        $visit->save();
+    }
+
     public function index()
     {
-        return view('content.pages.descuentos.pages-descuentos');
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
+        return view('content.pages.descuentos.pages-descuentos', ['visitas' => $visitas]);
     }
 
     public function create()
     {
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
         $programas = Programa::get();
-        return view('content.pages.descuentos.pages-descuentos-registro', ['programas' => $programas]);
+        return view('content.pages.descuentos.pages-descuentos-registro', ['programas' => $programas, 'visitas' => $visitas]);
     }
     public function store(StoreDescuentosRequest $request)
     {
@@ -40,9 +56,14 @@ class DescuentosController extends Controller
 
     public function edit($id)
     {
+        $path = request()->path();
+        $basepath = preg_replace("/\/[0-9]+/", "/*", $path);
+        $this->updateVisitCount($basepath);
+        $visitas = Visitas::where('ruta', $basepath)->first();
+
         $descuento = Descuento::find($id);
         $programas = Programa::get();
-        return view('content.pages.descuentos.pages-descuentos-update', ['descuento' => $descuento, 'programas' => $programas]);
+        return view('content.pages.descuentos.pages-descuentos-update', ['descuento' => $descuento, 'programas' => $programas, 'visitas' => $visitas]);
     }
 
     public function update(StoreDescuentosRequest $request, $id)

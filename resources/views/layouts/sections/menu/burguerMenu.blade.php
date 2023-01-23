@@ -30,7 +30,7 @@
             @endif
 
             @if(@Auth::user()->hasRole(config('variables.rol_admin')) || @Auth::user()->hasRole(config('variables.rol_admin_progr')))
-            <a href="{{route('descuentos.index')}}" class="dashboard-nav-item"><i class="fas fa-award"></i>Gest. Descuentos</a>
+            <a href="{{route('descuentos.index')}}" class="dashboard-nav-item"><i class="fas fa-bullhorn"></i>Gest. Descuentos</a>
             @endif
 
             <div class='dashboard-nav-dropdown'><a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle"><i class="fas fa-user-graduate"></i> Registros </a>

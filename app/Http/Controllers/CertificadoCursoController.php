@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCertificadoCursoRequest;
 use App\Models\CertificadoCurso;
 use App\Models\InscripcionCurso;
+use App\Models\Visitas;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -15,32 +16,30 @@ class CertificadoCursoController extends Controller
         $this->middleware('auth');
         $this->middleware('role:' . config('variables.rol_admin') . '|' . config('variables.rol_admin_inscrip'));
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    public function updateVisitCount($path)
     {
-        return view('content.pages.certificados.pages-certificado-curso');
+        $visit = Visitas::firstOrNew(['ruta' => $path]);
+        $visit->increment('contador');
+        $visit->save();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function index()
+    {
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
+        return view('content.pages.certificados.pages-certificado-curso', ['visitas' => $visitas]);
+    }
+
+
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(StoreCertificadoCursoRequest $request)
     {
         date_default_timezone_set("America/La_Paz");
@@ -72,50 +71,42 @@ class CertificadoCursoController extends Controller
                 'curso' => $inscripcion->curs->curs_id
             ]);
 
-            return view('content.pages.certificados.pages-certificados-cursos-view', ['certificado' => $certificado]);
+            return redirect()->route('certificados-curso.show', ['certificados_curso' => $certificado->cert_curs_id]);
         }
         return redirect()->back()->withErrors(['er' => 'El Id no existe o el estudiante no esta inscrito']);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         date_default_timezone_set("America/La_Paz");
         setlocale(LC_TIME, 'es_BO.UTF-8', 'esp');
         $certificado = CertificadoCurso::find($id);
         if ($certificado) {
-            return view('content.pages.certificados.pages-certificados-cursos-view', ['certificado' => $certificado]);
+            $path = request()->path();
+            $basepath = preg_replace("/\/[0-9]+/", "/*", $path);
+            $this->updateVisitCount($basepath);
+            $visitas = Visitas::where('ruta', $basepath)->first();
+
+            return view('content.pages.certificados.pages-certificados-cursos-view', ['certificado' => $certificado, 'visitas' => $visitas]);
         }
         return redirect()->back()->withErrors(['er' => 'No existe el id del certificado']);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $certificado = CertificadoCurso::find($id);
         if ($certificado) {
-            return view('content.pages.certificados.pages-certificado-curso-edit', ['certificado' => $certificado]);
+            $path = request()->path();
+            $basepath = preg_replace('/\/\d+/', '/*', $path);
+            $this->updateVisitCount($basepath);
+            $visitas = Visitas::where('ruta', $basepath)->first();
+
+            return view('content.pages.certificados.pages-certificado-curso-edit', ['certificado' => $certificado, 'visitas' => $visitas]);
         }
         return redirect()->back()->withErrors(['er' => 'El certificado no existe']);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(StoreCertificadoCursoRequest $request, $id)
     {
 
@@ -131,12 +122,6 @@ class CertificadoCursoController extends Controller
         return redirect()->back()->withErrors(['er' => 'El certificado no existe']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         try {

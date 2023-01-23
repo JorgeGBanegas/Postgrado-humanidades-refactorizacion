@@ -54,3 +54,6 @@
     <a type="button" style="margin-top: 20px;" class="btn btn-primary" href="{{route('certificados-programa.index')}}">Volver</a>
 </div>
 @endsection
+@section('visitas')
+<code>Visitas: {{$visitas->contador}}</code>
+@endsection

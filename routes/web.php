@@ -32,9 +32,11 @@ Role::create(['name' => 'administrativo_inscripciones']);
 
 App::setLocale("es");
 
-Route::get('/home', [HomeController::class, 'index']);
+Route::get('/home', [HomeController::class, 'index'])->name('home.index');
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', function () {
+    return to_route('home.index');
+});
 
 //Auth::routes();
 Route::get("/login", [LoginController::class, 'showLoginForm'])->name('showLoginForm');

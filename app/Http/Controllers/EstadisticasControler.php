@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Visitas;
 use Illuminate\Http\Request;
 
 class EstadisticasControler extends Controller
@@ -12,13 +13,28 @@ class EstadisticasControler extends Controller
         $this->middleware('role:' . config('variables.rol_admin'));
     }
 
+    public function updateVisitCount($path)
+    {
+        $visit = Visitas::firstOrNew(['ruta' => $path]);
+        $visit->increment('contador');
+        $visit->save();
+    }
+
     public function programas()
     {
-        return view('content.pages.graficos.grafico-inscripcion-programa');
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
+        return view('content.pages.graficos.grafico-inscripcion-programa', ['visitas' => $visitas]);
     }
 
     public function cursos()
     {
-        return view('content.pages.graficos.grafico-inscripcion-curso');
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
+        return view('content.pages.graficos.grafico-inscripcion-curso', ['visitas' => $visitas]);
     }
 }

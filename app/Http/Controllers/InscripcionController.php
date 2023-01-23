@@ -6,6 +6,7 @@ use App\Models\InscripcionCurso;
 use App\Models\InscripcionPrograma;
 use App\Models\Persona;
 use App\Models\Programa;
+use App\Models\Visitas;
 use Illuminate\Http\Request;
 
 class InscripcionController extends Controller
@@ -15,33 +16,35 @@ class InscripcionController extends Controller
         $this->middleware('auth');
         $this->middleware('role:' . config('variables.rol_admin') . '|' . config('variables.rol_admin_inscrip'));
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    public function updateVisitCount($path)
+    {
+        $visit = Visitas::firstOrNew(['ruta' => $path]);
+        $visit->increment('contador');
+        $visit->save();
+    }
+
     public function index()
     {
-        return view('content.pages.personas.pages-persona-inscritos');
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
+        return view('content.pages.personas.pages-persona-inscritos', ['visitas' => $visitas]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
         $estudiantes = Persona::where('per_tipo', [1])->get();
-        return view('content.pages.personas.pages-persona-inscripcion', ['listaEstudiantes' => $estudiantes]);
+        return view('content.pages.personas.pages-persona-inscripcion', ['listaEstudiantes' => $estudiantes, 'visitas' => $visitas]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
 
@@ -72,9 +75,13 @@ class InscripcionController extends Controller
 
     public function showProgram($id)
     {
+        $path = request()->path();
+        $basepath = preg_replace("/\/[0-9]+/", "/*", $path);
+        $this->updateVisitCount($basepath);
+        $visitas = Visitas::where('ruta', $basepath)->first();
         $inscripcion = InscripcionPrograma::find($id);
         $tipo = 1;
-        return view('content.pages.personas.page-persona-boleta', ['inscripcion' => $inscripcion], ['tipo' => $tipo]);
+        return view('content.pages.personas.page-persona-boleta', ['inscripcion' => $inscripcion, 'tipo' => $tipo, 'visitas' => $visitas]);
     }
 
 

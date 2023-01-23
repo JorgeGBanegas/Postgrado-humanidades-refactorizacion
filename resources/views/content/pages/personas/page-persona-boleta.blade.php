@@ -57,5 +57,20 @@
     </div>
 
 </div>
+@if($tipo == 1)
+<div class="container">
+    <a type="button" style="margin-top: 20px;" class="btn btn-primary" href="{{route('inscripciones.index')}}">Volver</a>
+</div>
+@else
+<div class="container">
+    <a type="button" style="margin-top: 20px;" class="btn btn-primary" href="{{route('inscripcion-curso.index')}}">Volver</a>
+</div>
 
+@endif
+
+@endsection
+
+
+@section('visitas')
+<code>Visitas: {{$visitas->contador}}</code>
 @endsection

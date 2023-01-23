@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\InscripcionCurso;
 use App\Models\Persona;
+use App\Models\Visitas;
 use Illuminate\Http\Request;
 
 class InscripcionCursoController extends Controller
@@ -13,33 +14,35 @@ class InscripcionCursoController extends Controller
         $this->middleware('auth');
         $this->middleware('role:' . config('variables.rol_admin') . '|' . config('variables.rol_admin_inscrip'));
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    public function updateVisitCount($path)
+    {
+        $visit = Visitas::firstOrNew(['ruta' => $path]);
+        $visit->increment('contador');
+        $visit->save();
+    }
+
     public function index()
     {
-        return view('content.pages.personas.pages-persona-inscritos-cursos');
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
+        return view('content.pages.personas.pages-persona-inscritos-cursos', ['visitas' => $visitas]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
         $estudiantes = Persona::where('per_tipo', [1])->get();
-        return view('content.pages.personas.pages-persona-inscripcion-cursos', ['listaEstudiantes' => $estudiantes]);
+        return view('content.pages.personas.pages-persona-inscripcion-cursos', ['listaEstudiantes' => $estudiantes, 'visitas' => $visitas]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
 
@@ -68,37 +71,24 @@ class InscripcionCursoController extends Controller
         return to_route('inscripcion-curso.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
+        $path = request()->path();
+        $basepath = preg_replace("/\/[0-9]+/", "/*", $path);
+        $this->updateVisitCount($basepath);
+        $visitas = Visitas::where('ruta', $basepath)->first();
+
         $inscripcion = InscripcionCurso::find($id);
         $tipo = 2;
-        return view('content.pages.personas.page-persona-boleta', ['inscripcion' => $inscripcion], ['tipo' => $tipo]);
+        return view('content.pages.personas.page-persona-boleta', ['inscripcion' => $inscripcion, 'tipo' => $tipo, 'visitas' => $visitas]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $inscrCurso = InscripcionCurso::find($id);

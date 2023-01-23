@@ -6,31 +6,38 @@ use App\Http\Requests\StorePersonaRequest;
 use App\Http\Requests\UpdatePersonaRequest;
 use App\Models\Persona;
 use App\Models\TipoUsuario;
+use App\Models\Visitas;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PersonaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function updateVisitCount($path)
     {
-        return view('content.pages.personas.pages-persona');
+        $visit = Visitas::firstOrNew(['ruta' => $path]);
+        $visit->increment('contador');
+        $visit->save();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function index()
+    {
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
+        return view('content.pages.personas.pages-persona', ['visitas' => $visitas]);
+    }
+
+
     public function create()
     {
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
         $tipos = $this->obtenerTipos();
-        return view('content.pages.personas.pages-persona-registro', ['listaTipos' => $tipos]);
+        return view('content.pages.personas.pages-persona-registro', ['listaTipos' => $tipos, 'visitas' => $visitas]);
     }
 
     private function obtenerTipos()
@@ -47,12 +54,7 @@ class PersonaController extends Controller
         return $tipos;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(StorePersonaRequest $request)
     {
         $persona = Persona::create([
@@ -73,37 +75,25 @@ class PersonaController extends Controller
         return to_route('personas.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
+        $path = request()->path();
+        $basepath = preg_replace('/\/\d+/', '/*', $path);
+        $this->updateVisitCount($basepath);
+        $visitas = Visitas::where('ruta', $basepath)->first();
+
         $persona = Persona::find($id);
         $tipos = $this->obtenerTipos();
-        return view('content.pages.personas.pages-persona-update', ['listaTipos' => $tipos], ['persona' => $persona]);
+        return view('content.pages.personas.pages-persona-update', ['listaTipos' => $tipos], ['persona' => $persona, 'visitas' => $visitas]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(UpdatePersonaRequest $request, $id)
     {
         $persona = Persona::find($id);
@@ -124,12 +114,6 @@ class PersonaController extends Controller
         return to_route('personas.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
 

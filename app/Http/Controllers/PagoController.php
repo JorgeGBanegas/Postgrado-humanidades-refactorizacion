@@ -16,33 +16,12 @@ class PagoController extends Controller
         $this->middleware('role:' . config('variables.rol_admin') . '|' . config('variables.rol_admin_inscrip'));
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create($planPago, $tipo)
     {
         //return redirect()->action([PagosController::class, 'create'], ['planPago' => $planPago]);
         return view('content.pages.pagos.pages-add-pago', ['plan' => $planPago], ['tipo' => $tipo]);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StorePagoRequest $request, $planPago)
     {
 
@@ -88,35 +67,15 @@ class PagoController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function updatePago(StorePagoRequest $request, $planPago)
     {
         $this->almacenarPago($request, $planPago);
@@ -125,6 +84,7 @@ class PagoController extends Controller
 
     public function updateEstado($id)
     {
+        dd("dsds");
         $pago = Pago::find($id);
         if ($pago) {
             $pago->pago_estado = true;

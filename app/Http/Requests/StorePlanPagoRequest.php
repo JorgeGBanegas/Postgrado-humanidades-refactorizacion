@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePlanPagoRequest extends FormRequest
 {
@@ -24,15 +25,16 @@ class StorePlanPagoRequest extends FormRequest
     public function rules()
     {
         return [
-            'plan_pago_pagtot' => 'required | numeric | min:0 '
+            'inscripcion_alumno' => 'required | numeric | exists:inscripcion_programa,inscrip_program_nro',
+            'plan_pago_descrip' => 'sometimes|nullable|string',
+            'pago_descuento' => 'required | numeric',
+            'pago_total' => 'required | numeric',
+            'tipo_pago' =>  'required | numeric | in:1,2'
         ];
     }
 
     public function messages()
     {
-        return [
-            'plan_pago_pagtot.required' => 'El monto a pagar es obligatorio',
-            'plan_pago_pagtot.numeric' => 'El monto debe ser numerico y positivo',
-        ];
+        return [];
     }
 }

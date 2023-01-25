@@ -67,8 +67,8 @@ Route::resource('certificados-curso', CertificadoCursoController::class);
 /** Pagos verificado con roles*/
 
 Route::resource('pagos', PagosController::class);
-Route::get('pagos/create/{planPago}', [PagosController::class, 'create'])->name('pagos.create');
-Route::get('pagos/delete/{planPago}', [PagosController::class, 'delete'])->name('pagos.delete');
+//Route::get('pagos/create/{planPago}', [PagosController::class, 'create'])->name('pagos.create');
+//Route::get('pagos/delete/{planPago}', [PagosController::class, 'delete'])->name('pagos.delete');
 Route::patch('pagos/update/{planPago}', [PagosController::class, 'updatePlan'])->name('pagos.updatePlan');
 
 

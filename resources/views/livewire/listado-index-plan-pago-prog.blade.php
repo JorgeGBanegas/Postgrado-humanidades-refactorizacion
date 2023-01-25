@@ -2,49 +2,11 @@
     @include('layouts.sections.navbar.nav-search')
 
     <!-- Basic Bootstrap Table -->
-    <button style="margin-bottom: 25px;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#basicModal">
+    <a type="button" href="{{route('pagos.create')}}" style="margin-bottom: 25px;" type="button" class="btn btn-primary">
         Registrar
-    </button>
+    </a>
 
-    @if($errors->any())
     @include('layouts.errors')
-    @endif
-
-
-    <!-- Modal -->
-    <div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form action="{{ route('pagos.store') }}" method="POST">
-                    @csrf()
-                    @method('POST')
-
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel1">Registrar Pago</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="col">
-                            <label for="DataListEstudiantes" class="form-label">Buscar Estudiantes Registrados</label>
-                            <input name="inscripcion_alumno" required class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
-                            <datalist id="datalistOptions">
-                                @foreach($inscripciones as $inscripcion)
-                                <option value="{{ $inscripcion->inscrip_program_nro}}"> {{ $inscripcion->persona->per_nom}} {{ $inscripcion->persona->per_appm}} - {{$inscripcion->program->program_nom}}
-                                    @endforeach
-                            </datalist>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-outline-primary">Registrar</button>
-
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
 
     <!--- Listado--->
     <div class="card">
@@ -88,7 +50,12 @@
                                 <a style="margin: 2px;" href="{{route('pagos.show', $plan->plan_pago_nro)}}" class="btn btn-primary btn-sm">Ver</a>
                                 <a style="margin: 2px;" href="{{route('pagos.edit', $plan->plan_pago_nro)}}" class=" btn btn-warning btn-sm">Editar</a>
                                 @if(@Auth::user()->hasRole(config('variables.rol_admin')))
-                                <a style="margin: 2px;" href="{{route('pagos.delete', $plan->plan_pago_nro)}}" class="btn btn-danger btn-sm">Eliminar</a>
+                                <form action="{{route('pagos.destroy', $plan->plan_pago_nro)}}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button style="margin: 2px;" type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                </form>
+
                                 @endif
                             </div>
                         </td>

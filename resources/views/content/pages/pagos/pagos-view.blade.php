@@ -16,13 +16,14 @@
                 <h6 class="mb-2">Alumno: {{ $plan->inscripcion_programa->persona->per_nom }} {{ $plan->inscripcion_programa->persona->per_appm }}</h6>
                 <h6 class="mb-2">Programa: {{ $plan->inscripcion_programa->program->program_nom }}</h6>
                 <h6 class="mb-2">Precio del Programa: {{ $plan->inscripcion_programa->program->program_precio }} Bs.</h6>
-                <h6 class="mb-2">Total a pagar: {{ $plan->plan_pago_pagtot }} Bs.</h6>
+                <h6 class="mb-2">Descripcion: {{ $plan->plan_pago_descrip }} </h6>
 
                 @if(sizeof($plan->pagos) == 1 && $plan->pagos[0]->pago_monto == $plan->plan_pago_pagtot)
-
+                <h6 class="mb-2">Total Pagado: {{ $plan->plan_pago_pagtot }} Bs.</h6>
                 <h6 class="mb-2">Tipo de pago: Pago al contado</h6>
 
                 @else
+                <h6 class="mb-2">Total a pagar: {{ $plan->plan_pago_pagtot }} Bs.</h6>
                 <h6 class="mb-2">Tipo de pago: Plan de Pagos</h6>
 
                 <div class="card" id="lista_pagos">
@@ -83,4 +84,7 @@
         </div>
     </div>
 </div>
+@endsection
+@section('visitas')
+<code>Visitas: {{$visitas->contador}}</code>
 @endsection

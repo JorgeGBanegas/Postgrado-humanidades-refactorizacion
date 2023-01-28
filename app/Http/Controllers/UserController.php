@@ -5,22 +5,45 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use App\Models\Visitas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('role:' . config('variables.rol_admin'));
     }
-    public function index()
+
+    public function updateVisitCount($path)
     {
-        return view('content.pages.users.pages-user');
+        $visit = Visitas::firstOrNew(['ruta' => $path]);
+        $visit->increment('contador');
+        $visit->save();
     }
 
-    protected function create(StoreUserRequest $request)
+    public function index()
+    {
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
+        return view('content.pages.users.pages-user', ['visitas' => $visitas]);
+    }
+
+    public function showRegistrationForm()
+    {
+        $path = request()->path();
+        $this->updateVisitCount($path);
+        $visitas = Visitas::where('ruta', $path)->first();
+
+        return view('auth.register', ['visitas' => $visitas]);
+    }
+
+    protected function store(StoreUserRequest $request)
     {
 
         $user =  User::create([
@@ -33,7 +56,7 @@ class UserController extends Controller
 
         $user->assignRole($request->input('type'));
 
-        return to_route('users.index');
+        return to_route('user.index');
     }
 
     protected function update(UpdateUserRequest $request, $id)
@@ -57,7 +80,13 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('content.pages.users.pages-user-update', ['user' => $user]);
+
+        $path = request()->path();
+        $basepath = preg_replace('/\/\d+/', '/*', $path);
+        $this->updateVisitCount($basepath);
+        $visitas = Visitas::where('ruta', $basepath)->first();
+
+        return view('content.pages.users.pages-user-update', ['user' => $user, 'visitas' => $visitas]);
     }
 
     protected function delete($id)

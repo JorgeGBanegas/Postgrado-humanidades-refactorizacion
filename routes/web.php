@@ -43,8 +43,8 @@ Route::get("/login", [LoginController::class, 'showLoginForm'])->name('showLogin
 Route::post("/login", [LoginController::class, 'login'])->name('login');
 Route::post("/logout", [LoginController::class, 'logout'])->name('logout');
 
-Route::get("/register", [RegisterController::class, 'showRegistrationForm'])->name('showRegistrationForm');
-Route::post("/register", [RegisterController::class, 'store'])->name('register');
+Route::get("/register", [UserController::class, 'showRegistrationForm'])->name('showRegistrationForm');
+Route::post("/register", [UserController::class, 'store'])->name('register');
 
 
 /* Personas verificado con roles*/

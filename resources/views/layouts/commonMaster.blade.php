@@ -54,7 +54,8 @@
     var title_card = document.querySelector('.card-header');
     var input = document.querySelectorAll('.form-control');
     var select = document.querySelectorAll('.form-select');
-    var elements = [body, dashboard_nav, dashboard_toolbar, footer, card, table, title_card, ...input, ...select];
+    var modal = document.querySelector('.modal-content');
+    var elements = [body, dashboard_nav, dashboard_toolbar, footer, card, table, title_card, ...input, ...select, modal];
 
     setDarkmode();
     //load();

@@ -1,4 +1,4 @@
-<div class="card">
+<div>
     <div style="align-items: center; display: inline-flex; justify-content: space-between;">
         <div class="row">
             <div class="d-flex">

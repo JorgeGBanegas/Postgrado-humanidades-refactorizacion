@@ -1,5 +1,5 @@
 <div>
-    <div class="card" id="lista_pagos">
+    <div id="lista_pagos">
         <div class="d-flex">
             <div>
                 <h5 class="card-header">Listado de Pagos</h5>

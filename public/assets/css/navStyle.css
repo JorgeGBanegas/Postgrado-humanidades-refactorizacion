@@ -468,3 +468,8 @@ body.darkmode {
     background-color: #525252;
     color: white;
 }
+
+.modal-content.darkmode {
+    background-color: #525252;
+    color: white;
+}

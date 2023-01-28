@@ -81,8 +81,8 @@
                         <button id="btn-close-alert" type="button" class="btn-close" aria-label="Close"></button>
                     </div>
                     <div class="d-flex">
-                        <button style="margin: 10px;" type="submit" class="btn btn-primary">Registrar</button>
-                        <a style="margin: 10px;" class="btn btn-danger" href="{{route('programas.index')}}">Cancelar</a>
+                        <button style="margin-top: 10px; margin-right: 5px;" type="submit" class="btn btn-primary">Registrar</button>
+                        <a style="margin-top: 10px;" class="btn btn-danger" href="{{route('programas.index')}}">Cancelar</a>
                     </div>
                 </form>
 

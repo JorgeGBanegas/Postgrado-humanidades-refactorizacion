@@ -30,11 +30,87 @@
   @yield('layoutContent')
   <!--/ Layout Content -->
 
-
+  <div class="toggle">
+    <input type="checkbox" class="checkbox" id="checkbox">
+    <label for="checkbox" class="label">
+      <i class="fas fa-moon"></i>
+      <i class='fas fa-sun'></i>
+      <div class='ball'>
+    </label>
+  </div>
   <!-- Include Scripts -->
   @include('layouts/sections/scripts')
   @livewireScripts
 
-</body>
+
+  <script>
+    const checkbox = document.getElementById('checkbox');
+    var body = document.body;
+    var dashboard_nav = document.querySelector('.dashboard-nav');
+    var dashboard_toolbar = document.querySelector('.dashboard-toolbar');
+    var footer = document.querySelector('.bg-footer-theme');
+    var card = document.querySelector('.card');
+    var table = document.querySelector('.table');
+    var title_card = document.querySelector('.card-header');
+    var input = document.querySelectorAll('.form-control');
+    var select = document.querySelectorAll('.form-select');
+    var elements = [body, dashboard_nav, dashboard_toolbar, footer, card, table, title_card, ...input, ...select];
+
+    setDarkmode();
+    //load();
+
+    document.addEventListener('livewire:update', function(event) {
+      load();
+    });
+
+    function setDarkmode() {
+      var currentTime = new Date().getHours();
+      if (currentTime >= 16 || currentTime < 6) {
+        checkbox.checked = false;
+        elements.forEach((element) => {
+          if (element) {
+            element.classList.add('darkmode');
+            store(element.classList.contains('darkmode'));
+          }
+        });
+      } else {
+        checkbox.checked = true;
+        elements.forEach(function(element) {
+          if (element) {
+            element.classList.remove('darkmode');
+          }
+        });
+        store('false');
+      }
+    }
+
+
+    checkbox.addEventListener('change', () => {
+
+      elements.forEach((element) => {
+        if (element) {
+          element.classList.toggle('darkmode');
+          store(element.classList.contains('darkmode'));
+        }
+      });
+    })
+
+    function load() {
+      const darkmode = localStorage.getItem('darkmode');
+      if (!darkmode) {
+        store('false');
+      } else if (darkmode == 'true') {
+        elements.forEach((element) => {
+          if (element) {
+            element.classList.add('darkmode');
+          }
+        })
+      }
+    }
+
+    function store(value) {
+      localStorage.setItem('darkmode', value);
+    }
+  </script>
 
 </html>

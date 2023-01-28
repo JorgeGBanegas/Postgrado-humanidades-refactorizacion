@@ -352,7 +352,7 @@ h1,
 
 .dashboard-toolbar {
     min-height: 84px;
-    background-color: #e0e1ff;
+    background-color: #5354bd;
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -426,4 +426,45 @@ h1,
     .dashboard-compact .dashboard-toolbar {
         left: 0;
     }
+}
+
+
+body.darkmode {
+    background-color:#3c3c3c;
+}
+.dashboard-nav.darkmode {
+    background-color: #525252;
+    color: white;
+}
+
+.dashboard-toolbar.darkmode {
+    background-color: #2b2b2b;
+    color: white;
+}
+
+.bg-footer-theme.darkmode {
+    background-color: #2b2b2b !important;
+    color: white;
+}
+
+.card.darkmode {
+    background-color: #525252;
+}
+
+.table.darkmode {
+    color: white;
+}
+
+.card-header.darkmode {
+    color: white;
+}
+
+.form-control.darkmode {
+    background-color: #525252;
+    color: white;
+}
+
+.form-select.darkmode {
+    background-color: #525252;
+    color: white;
 }

@@ -1,11 +1,10 @@
 @extends('layouts.sections.menu.burguerMenu')
-@extends('layouts.sections.footer.footer')
 @section('title', 'Home')
 
 @section('content-body')
 
-<div style="text-align: center;">
-    <img src="{{ asset('assets/img/logo/postgradoHumanidades.jpg') }}" alt="">
+<div style="text-align: center;" class="card">
+    <img src="{{ asset('assets/img/logo/postgradoHumanidades.png') }}" alt="">
 </div>
 @endsection
 

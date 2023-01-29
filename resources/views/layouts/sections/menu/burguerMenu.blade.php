@@ -19,7 +19,7 @@
 
         <nav class="dashboard-nav-list">
 
-            <a href="/" class="dashboard-nav-item"><i class="fas fa-home"></i>Home </a>
+            <a href="{{url('/')}}" class="dashboard-nav-item"><i class="fas fa-home"></i>Home </a>
 
             @if(@Auth::user()->hasRole(config('variables.rol_admin')) || @Auth::user()->hasRole(config('variables.rol_admin_progr')))
             <a href="{{route('programas.index')}}" class="dashboard-nav-item"><i class="fas fa-chalkboard"></i>Gest. Programas</a>

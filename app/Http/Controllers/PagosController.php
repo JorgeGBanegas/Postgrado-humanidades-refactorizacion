@@ -86,7 +86,7 @@ class PagosController extends Controller
                 $totalAPagar = 0;
                 foreach ($listaDePagos as $pago) {
                     $concepto = $pago['pago_concepto'];
-                    $fechaCobro = date('d-m-Y', strtotime($pago['pago_fecha_cobro']));
+                    $fechaCobro = date('Y-m-d', strtotime($pago['pago_fecha_cobro']));
                     $monto = $pago['pago_monto'];
                     $totalAPagar += $monto;
                     Pago::create([

@@ -1,27 +1,27 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\CertificadoCursoController;
-use App\Http\Controllers\CertificadoProgramaController;
-use App\Http\Controllers\CursoController;
-use App\Http\Controllers\DescuentosController;
-use App\Http\Controllers\EstadisticasControler;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\HorarioCursoController;
-use App\Http\Controllers\HorarioProgramaController;
-use App\Http\Controllers\InscripcionController;
-use App\Http\Controllers\InscripcionCursoController;
-use App\Http\Controllers\ModuloProgramaController;
-use App\Http\Controllers\PagoController;
-use App\Http\Controllers\PagosController;
-use App\Http\Controllers\PersonaController;
-use App\Http\Controllers\ProgramaController;
-use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PagoController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\CursoController;
+use App\Http\Controllers\PagosController;
+use App\Http\Controllers\PersonaController;
+use App\Http\Controllers\ProgramaController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\DescuentosController;
+use App\Http\Controllers\EstadisticasControler;
+use App\Http\Controllers\InscripcionController;
+use App\Http\Controllers\HorarioCursoController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ModuloProgramaController;
+use App\Http\Controllers\HorarioProgramaController;
+use App\Http\Controllers\CertificadoCursoController;
+use App\Http\Controllers\InscripcionCursoController;
+use App\Http\Controllers\CertificadoProgramaController;
 
 /*use Spatie\Permission\Models\Role;
 
@@ -73,8 +73,8 @@ Route::patch('pagos/update/{planPago}', [PagosController::class, 'updatePlan'])-
 
 
 Route::resource('pago', PagoController::class);
-Route::post('pago/{planPago}', [PagoController::class, 'store'])->name('pago.store');
-Route::get('pago/create/{planPago}/{tipo}', [PagoController::class, 'create'])->name('pago.create');
+//Route::post('pago/{planPago}', [PagoController::class, 'store'])->name('pago.store');
+//Route::get('pago/create/{planPago}/{tipo}', [PagoController::class, 'create'])->name('pago.create');
 Route::patch('pago/pagar/{pago}', [PagoController::class, 'updateEstado'])->name('pago.updateEstado');
 
 

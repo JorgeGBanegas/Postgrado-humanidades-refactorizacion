@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Curso;
+use App\Models\GrupoCurso;
 use App\Models\InscripcionCurso;
 use App\Models\Persona;
 use App\Models\Visitas;
@@ -50,7 +52,8 @@ class InscripcionCursoController extends Controller
         $visitas = Visitas::where('ruta', $path)->first();
 
         $estudiantes = Persona::where('per_tipo', [1])->get();
-        return view('content.pages.personas.pages-persona-inscripcion-cursos', ['listaEstudiantes' => $estudiantes, 'visitas' => $visitas]);
+        $cursos = Curso::get();
+        return view('content.pages.personas.pages-persona-inscripcion-cursos', ['listaEstudiantes' => $estudiantes, 'cursos' => $cursos, 'visitas' => $visitas]);
     }
 
 
@@ -106,5 +109,13 @@ class InscripcionCursoController extends Controller
         $inscrCurso->inscrip_curs_estado = false;
         $inscrCurso->save();
         return to_route('inscripcion-curso.index');
+    }
+
+
+    public function getGroupsByCourse($idCourse)
+    {
+        $groups = GrupoCurso::with('horario_cursos')
+            ->where('curso', '=', $idCourse)->get();
+        return response()->json(['groups' => $groups]);
     }
 }

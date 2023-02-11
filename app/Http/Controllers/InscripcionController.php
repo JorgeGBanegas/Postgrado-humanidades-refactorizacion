@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GrupoPrograma;
 use App\Models\InscripcionCurso;
 use App\Models\InscripcionPrograma;
 use App\Models\Persona;
@@ -53,7 +54,8 @@ class InscripcionController extends Controller
         $visitas = Visitas::where('ruta', $path)->first();
 
         $estudiantes = Persona::where('per_tipo', [1])->get();
-        return view('content.pages.personas.pages-persona-inscripcion', ['listaEstudiantes' => $estudiantes, 'visitas' => $visitas]);
+        $programas = Programa::get();
+        return view('content.pages.personas.pages-persona-inscripcion', ['listaEstudiantes' => $estudiantes, 'programas' => $programas, 'visitas' => $visitas]);
     }
 
 
@@ -103,5 +105,12 @@ class InscripcionController extends Controller
         $inscrProgram->inscrip_program_estado = false;
         $inscrProgram->save();
         return to_route('inscripciones.index');
+    }
+
+    public function getGroupsByProgram($idProgram)
+    {
+        $groups = GrupoPrograma::with('horario_programas')
+            ->where('programa', '=', $idProgram)->get();
+        return response()->json(['groups' => $groups]);
     }
 }

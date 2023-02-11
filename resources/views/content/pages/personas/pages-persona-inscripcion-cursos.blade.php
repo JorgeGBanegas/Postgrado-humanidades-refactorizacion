@@ -26,8 +26,8 @@
                                 <input name="inscripcion_alumno" required class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
                                 <datalist id="datalistOptions">
                                     @foreach($listaEstudiantes as $estudiante)
-                                    <option value="{{ $estudiante->per_ci}}"> {{ $estudiante->per_nom}} {{ $estudiante->per_appm}}
-                                        @endforeach
+                                    <option value="{{ $estudiante->per_ci}}"> {{ $estudiante->per_nom}} {{ $estudiante->per_appm}}</option>
+                                    @endforeach
                                 </datalist>
                             </div>
                             <div class="col-2">
@@ -36,7 +36,7 @@
                             </div>
                         </div>
                     </div>
-                    @livewire('select-anidado-cursos')
+                    @include('content.pages.personas.select-anidado-cursos')
 
                     <div class="container d-flex">
                         <button style="margin-top: 10px; margin-bottom: 10px;" type="submit" class="btn btn-primary">Inscribir</button>

@@ -53,7 +53,11 @@ Route::resource('personas', PersonaController::class)->middleware('auth');
 Route::resource('inscripciones', InscripcionController::class);
 Route::get('inscripciones/Programas/{inscripcione}', [InscripcionController::class, 'showProgram'])->name('inscripciones.showProgram');
 Route::patch('inscripciones/Programas/{inscripcione}', [InscripcionController::class, 'destroyProgram'])->name('inscripciones.destroyProgram');
+Route::get('inscripcion-programa/grupo-horario/{programa}', [InscripcionController::class, 'getGroupsByProgram'])->name('inscripciones-grupos.horarios');
+
+
 Route::resource('inscripcion-curso', InscripcionCursoController::class);
+Route::get('inscripcion-curso/grupo-horario/{curso}', [InscripcionCursoController::class, 'getGroupsByCourse'])->name('inscripciones-cursos-grupos.horarios');
 
 
 /* Estadisiticas verificado con roles*/

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Visitas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
 
 class UserController extends Controller
 {
@@ -25,13 +26,21 @@ class UserController extends Controller
         $visit->save();
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $route = Route::currentRouteName();
+        $search = trim($request->input('search'));
+
         $path = request()->path();
         $this->updateVisitCount($path);
         $visitas = Visitas::where('ruta', $path)->first();
 
-        return view('content.pages.users.pages-user', ['visitas' => $visitas]);
+        $users = User::where('name', 'ilike', '%' . $search . '%')
+            ->orwhere('last_name', 'ilike', '%' . $search . '%')
+            ->orwhere('email', 'ilike', '%' . $search . '%')
+
+            ->paginate(5);
+        return view('content.pages.users.pages-user', ['users' => $users, 'visitas' => $visitas, 'ruta' => $route, 'busqueda' => $search]);
     }
 
     public function showRegistrationForm()

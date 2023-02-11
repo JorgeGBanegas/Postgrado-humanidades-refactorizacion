@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -31,13 +32,26 @@ class HorarioProgramaController extends Controller
         $visit->save();
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $route = Route::currentRouteName();
+        $search = trim($request->input('search'));
+
         $path = request()->path();
         $this->updateVisitCount($path);
         $visitas = Visitas::where('ruta', $path)->first();
 
-        return view('content.pages.horarios.horario-programa', ['visitas' => $visitas]);
+        $gruposHorarios = GrupoPrograma::join('programa', 'program_id', 'grupo_programa.programa')
+            ->where(function ($q) use ($search) {
+                $q->where('grup_program_cod', 'ilike', '%' . $search . '%')
+                    ->orWhere('grup_program_vers', 'ilike', '%' . $search . '%')
+                    ->orWhere('grup_program_edic', 'ilike', '%' . $search . '%')
+                    ->orWhere('programa.program_nom', 'ilike', '%' . $search . '%');
+            })
+            //            ->orderBy('programa.program_nom', 'ASC')
+            ->orderBy('grup_program_id', 'DESC')
+            ->paginate(5);
+        return view('content.pages.horarios.horario-programa', ['gruposHorarios' => $gruposHorarios, 'visitas' => $visitas, 'ruta' => $route, 'busqueda' => $search]);
     }
 
     public function create()
@@ -158,5 +172,49 @@ class HorarioProgramaController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->withErrors(['err' => $e->getMessage()]);
         }
+    }
+
+
+    public function addOneSchedule(Request $request)
+    {
+        $validDays = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"];
+        $validator = Validator::make(
+            ['hora_program_dia' => $request->hora_program_dia, 'hora_program_hini' => $request->hora_program_hini, 'hora_program_hfin' => $request->hora_program_hfin, 'grup_program' => $request->grupo_horario],
+            [
+                'hora_program_dia' =>
+                ['required', Rule::in($validDays)],
+                'hora_program_hini' => 'required | date_format:H:i',
+                'hora_program_hfin' => 'required | date_format:H:i| after:hora_program_hini',
+                'grup_program' => 'required | numeric | exists:grupo_programa,grup_program_id',
+            ],
+            [
+                'hora_program_hfin.after' => 'La hora final debe ser mayor a la hora inicial',
+                'grup_program.exists' => 'No hay datos de este grupo',
+                'hora_program_hfin.date_format' => 'Formato de hora incorrecto'
+            ]
+        );
+
+        $validator->after(function ($validator) use ($request) {
+            if (HorarioPrograma::where('hora_program_dia', '=', $request->hora_program_dia)->where('hora_program_hini', '=', $request->hora_program_hini)->where('hora_program_hfin', '=', $request->hora_program_hfin)->where('grup_program', '=', $request->grupo_horario)->exists()) {
+                $validator->errors()->add('hora_program_dia', 'Ya existe este horario en este programa');
+            }
+        });
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        HorarioPrograma::create($validator->validate());
+        return response()->json(['message' => 'Horario agregado correctamente']);
+    }
+
+    public function deleteSchedule($id)
+    {
+        $horario = HorarioPrograma::find($id);
+        if ($horario) {
+            $horario->delete();
+            return response()->json(['message' => 'Horario eliminado correctamente'], 200);
+        }
+        return response()->json(['errors' => 'El Horario no existe'], 404);
     }
 }

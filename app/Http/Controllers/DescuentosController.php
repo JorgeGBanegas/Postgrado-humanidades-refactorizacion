@@ -9,6 +9,7 @@ use App\Models\Visitas;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 class DescuentosController extends Controller
 {
@@ -25,13 +26,22 @@ class DescuentosController extends Controller
         $visit->save();
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $route = Route::currentRouteName();
+        $search = trim($request->input('search'));
+
         $path = request()->path();
         $this->updateVisitCount($path);
         $visitas = Visitas::where('ruta', $path)->first();
+        $descuentos = Descuento::join('programa', 'programa.program_id', 'descuento.program_id')
+            ->where(function ($q) use ($search) {
+                $q->where('programa.program_nom', 'ilike', '%' . $search . '%')
+                    ->orwhere('descuento.desc_motivo', 'ilike', '%' . $search . '%')
+                    ->orwhere('descuento.desc_descrip', 'ilike', '%' . $search . '%');
+            })->orderBy('descuento.desc_id', 'DESC')->paginate(5);
 
-        return view('content.pages.descuentos.pages-descuentos', ['visitas' => $visitas]);
+        return view('content.pages.descuentos.pages-descuentos', ['descuentos' => $descuentos, 'visitas' => $visitas, 'ruta' => $route, 'busqueda' => $search]);
     }
 
     public function create()

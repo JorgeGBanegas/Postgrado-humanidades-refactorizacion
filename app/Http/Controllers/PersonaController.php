@@ -10,6 +10,7 @@ use App\Models\Visitas;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 class PersonaController extends Controller
 {
@@ -20,15 +21,49 @@ class PersonaController extends Controller
         $visit->save();
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $route = Route::currentRouteName();
+        $search = trim($request->input('search'));
+
         $path = request()->path();
         $this->updateVisitCount($path);
         $visitas = Visitas::where('ruta', $path)->first();
+        $listaPersonas = $this->obtenerLista($search);
 
-        return view('content.pages.personas.pages-persona', ['visitas' => $visitas]);
+
+        return view('content.pages.personas.pages-persona', ['listaPersonas' => $listaPersonas, 'visitas' => $visitas, 'ruta' => $route, 'busqueda' => $search]);
     }
 
+
+    private function obtenerLista($search)
+    {
+        $user = Auth::user();
+        $listaPersonas = null;
+        if ($user->hasRole(config('variables.rol_admin'))) {
+            $listaPersonas = Persona::join('tipo_usuario', 'persona.per_tipo', 'tipo_usuario.tipo_us_id')
+                ->where(function ($q) use ($search) {
+                    $q->where('persona.per_appm', 'ilike', '%' . $search . '%')
+                        ->orwhere('persona.per_nom', 'ilike', '%' . $search . '%')
+                        ->orwhere('persona.per_ci', 'ilike', '%' . $search . '%');
+                })->where('per_tipo', '=', 1)->orwhere('per_tipo', '=', 2)->paginate(5);
+        } else if ($user->hasRole(config('variables.rol_admin_progr'))) {
+            $listaPersonas = Persona::join('tipo_usuario', 'persona.per_tipo', 'tipo_usuario.tipo_us_id')
+                ->where(function ($q) use ($search) {
+                    $q->where('persona.per_appm', 'ilike', '%' . $search . '%')
+                        ->orwhere('persona.per_nom', 'ilike', '%' . $search . '%')
+                        ->orwhere('persona.per_ci', 'ilike', '%' . $search . '%');
+                })->where('per_tipo', '=', 2)->paginate(5);
+        } else if ($user->hasRole(config('variables.rol_admin_inscrip'))) {
+            $listaPersonas = Persona::join('tipo_usuario', 'persona.per_tipo', 'tipo_usuario.tipo_us_id')
+                ->where(function ($q) use ($search) {
+                    $q->where('persona.per_appm', 'ilike', '%' . $search . '%')
+                        ->orwhere('persona.per_nom', 'ilike', '%' . $search . '%')
+                        ->orwhere('persona.per_ci', 'ilike', '%' . $search . '%');
+                })->where('per_tipo', '=', 1)->paginate(5);
+        }
+        return $listaPersonas;
+    }
 
     public function create()
     {

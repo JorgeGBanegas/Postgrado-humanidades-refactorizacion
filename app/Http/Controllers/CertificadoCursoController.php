@@ -8,6 +8,7 @@ use App\Models\InscripcionCurso;
 use App\Models\Visitas;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 class CertificadoCursoController extends Controller
 {
@@ -24,13 +25,22 @@ class CertificadoCursoController extends Controller
         $visit->save();
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $route = Route::currentRouteName();
+        $search = trim($request->input('search'));
+
         $path = request()->path();
         $this->updateVisitCount($path);
         $visitas = Visitas::where('ruta', $path)->first();
 
-        return view('content.pages.certificados.pages-certificado-curso', ['visitas' => $visitas]);
+        $inscripciones = InscripcionCurso::where('inscrip_curs_estado', '=', 'true')->get();
+        $certificados = CertificadoCurso::join('persona', 'certificado_curso.estudiante', '=', 'persona.per_id')
+            ->where('persona.per_nom', 'ilike', '%' . $search . '%')
+            ->orwhere('persona.per_appm', 'ilike', '%' . $search . '%')
+            ->paginate(5);
+
+        return view('content.pages.certificados.pages-certificado-curso', ['visitas' => $visitas, 'ruta' => $route, 'busqueda' => $search, 'certificados' => $certificados, 'inscripciones' => $inscripciones]);
     }
 
 

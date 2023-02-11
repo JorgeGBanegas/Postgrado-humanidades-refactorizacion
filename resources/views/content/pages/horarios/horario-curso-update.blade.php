@@ -44,9 +44,9 @@
                             @enderror
                         </div>
                     </div>
-                    <!--- Listado de horarios--->
-                    @livewire('list-horarios-curs', ['grupoHorario'=>$grupoHorario])
-
+                    <!------------------ Listado de horarios------------------------>
+                    @include('content.pages.horarios.list-horarios-curs')
+                    <!-------------------------------------------------------------->
 
                     <div class="d-flex">
                         <button style="margin-top: 10px; margin-right: 5px;" type="submit" class="btn btn-primary">Guardar</button>

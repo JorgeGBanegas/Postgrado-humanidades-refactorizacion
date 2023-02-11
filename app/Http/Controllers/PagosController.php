@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 
 use function PHPUnit\Framework\isEmpty;
@@ -32,12 +33,26 @@ class PagosController extends Controller
     }
 
 
-    public function index()
+    public function index(Request $request)
     {
+        $route = Route::currentRouteName();
+        $search = trim($request->input('search'));
+
         $path = request()->path();
         $this->updateVisitCount($path);
         $visitas = Visitas::where('ruta', $path)->first();
-        return view('content.pages.pagos.pages-pagos', ['visitas' => $visitas]);
+
+        $inscripciones = InscripcionPrograma::where('inscrip_program_estado', true)->get();
+        $PlanesDePago = PlanDePago::join('inscripcion_programa', 'plan_de_pago.inscripcion', 'inscripcion_programa.inscrip_program_nro')
+            ->join('persona', 'per_id', 'inscripcion_programa.estudiante')
+            ->where(function ($q) use ($search) {
+                $q->where('persona.per_appm', 'ilike', '%' . $search . '%')
+                    ->orwhere('persona.per_nom', 'ilike', '%' . $search . '%')
+                    ->orwhere('persona.per_ci', 'ilike', '%' . $search . '%');
+            })->whereNot('plan_pago_pagtot', 0)
+            ->paginate(5);
+
+        return view('content.pages.pagos.pages-pagos', ['PlanesDePago' => $PlanesDePago, 'inscripciones' => $inscripciones, 'visitas' => $visitas, 'ruta' => $route, 'busqueda' => $search]);
     }
 
 

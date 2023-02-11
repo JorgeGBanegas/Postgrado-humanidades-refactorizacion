@@ -91,8 +91,8 @@ Route::delete('/users/delete/{user}', [UserController::class, 'delete'])->name('
 /**Gestionar Programas */
 
 Route::resource('programas', ProgramaController::class);
-
-
+Route::post('modulo/create', [ProgramaController::class, 'addModule'])->name('modulo.create');
+Route::delete('modulo/{modulo}', [ProgramaController::class, 'deleteModule'])->name('modulo.delete');
 
 /**Gestionar cursos */
 Route::resource('cursos', CursoController::class);
@@ -100,7 +100,13 @@ Route::resource('cursos', CursoController::class);
 
 /**Gestionar horarios */
 Route::resource('horarios-programas', HorarioProgramaController::class);
+Route::post('horarios-programas/add', [HorarioProgramaController::class, 'addOneSchedule'])->name('horarios-programas.add');
+Route::delete('horarios-programas/delete/{horario}', [HorarioProgramaController::class, 'deleteSchedule'])->name('horarios-programas.delete');
+
+
 Route::resource('horarios-cursos', HorarioCursoController::class);
+Route::post('horarios-cursos/add', [HorarioCursoController::class, 'addOneSchedule'])->name('horarios-cursos.add');
+Route::delete('horarios-cursos/delete/{horario}', [HorarioCursoController::class, 'deleteSchedule'])->name('horarios-cursos.delete');
 
 /**Gestionar Descuentos */
 Route::resource('descuentos', DescuentosController::class);

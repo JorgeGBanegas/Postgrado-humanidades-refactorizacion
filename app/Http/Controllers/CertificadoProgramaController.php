@@ -8,6 +8,7 @@ use App\Models\InscripcionPrograma;
 use App\Models\Visitas;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 class CertificadoProgramaController extends Controller
 {
@@ -17,13 +18,22 @@ class CertificadoProgramaController extends Controller
         $this->middleware('role:' . config('variables.rol_admin') . '|' . config('variables.rol_admin_inscrip'));
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $route = Route::currentRouteName();
+        $search = trim($request->input('search'));
+
         $path = request()->path();
         $this->updateVisitCount($path);
         $visitas = Visitas::where('ruta', $path)->first();
 
-        return view('content.pages.certificados.pages-certificados', ['visitas' => $visitas]);
+        $inscripciones = InscripcionPrograma::where('inscrip_program_estado', '=', 'true')->get();
+        $certificados = CertificadoPrograma::join('persona', 'certificado_programa.estudiante', '=', 'persona.per_id')
+            ->where('persona.per_nom', 'ilike', '%' . $search . '%')
+            ->orwhere('persona.per_appm', 'ilike', '%' . $search . '%')
+            ->paginate(5);
+
+        return view('content.pages.certificados.pages-certificados', ['visitas' => $visitas, 'ruta' => $route, 'busqueda' => $search, 'certificados' => $certificados, 'inscripciones' => $inscripciones]);
     }
 
     public function updateVisitCount($path)

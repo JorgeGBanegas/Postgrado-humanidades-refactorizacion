@@ -69,13 +69,10 @@
                             @enderror
                         </div>
                     </div>
+                    <!------------- Lista de modulos---------------->
 
+                    @include('content.pages.programas.list-programas-modulos-edit')
 
-
-                    <!---- agregar modulos ----->
-
-                    <!-- Lista de modulos--->
-                    @livewire('list-programas-modulos-edit', ['progr'=> $programa])
                     <!----------------------------------------------->
 
                     <div class="d-flex">

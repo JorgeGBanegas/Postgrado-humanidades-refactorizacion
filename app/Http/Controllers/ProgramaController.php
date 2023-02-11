@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -30,13 +31,21 @@ class ProgramaController extends Controller
         $visit->save();
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $route = Route::currentRouteName();
+        $search = trim($request->input('search'));
+
         $path = request()->path();
         $this->updateVisitCount($path);
         $visitas = Visitas::where('ruta', $path)->first();
+        $programas = Programa::where('program_nom', 'ilike', '%' . $search . '%')
+            ->orwhere('program_tipo', 'ilike', '%' . $search . '%')
+            ->orwhere('program_modalidad', 'ilike', '%' . $search . '%')
 
-        return view('content.pages.programas.pages-programas', ['visitas' => $visitas]);
+            ->paginate(5);
+
+        return view('content.pages.programas.pages-programas', ['programas' => $programas, 'visitas' => $visitas, 'ruta' => $route, 'busqueda' => $search]);
     }
 
     public function create()
@@ -160,5 +169,47 @@ class ProgramaController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->withErrors(['err' => $e->getMessage()]);
         }
+    }
+
+    public function addModule(Request $request)
+    {
+        $validator = Validator::make(
+            ['mod_program_nro' => $request->input('mod_program_nro'), 'mod_program_nom' => $request->input('mod_program_nom'), 'docente' => $request->input('docente'), 'programa' => $request->input('program_id')],
+            [
+                'mod_program_nro' => 'required | numeric | min: 1',
+                'mod_program_nom' => 'required | string',
+                'docente' => 'required | numeric | exists:persona,per_id',
+                'programa' => 'required | numeric | exists:programa,program_id',
+            ],
+            [
+                'docente.exists' => 'No hay datos de este docente',
+                'programa.exists' => 'No hay datos de este programa',
+            ]
+        );
+
+        $validator->after(
+            function ($validator) use ($request) {
+                if (ModuloPrograma::where('mod_program_nom', '=', $request->input('mod_program_nom'))->where('docente', '=', $request->input('docente'))->where('programa', '=', $request->input('program_id'))->exists()) {
+                    $validator->errors()->add('mod_program_nom', 'Ya existe un módulo con el mismo nombre, programa y docente');
+                }
+            }
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        ModuloPrograma::create($validator->validate());
+        return response()->json(['message' => 'Módulo agregado correctamente']);
+    }
+
+    public function deleteModule($id)
+    {
+        $modulo = ModuloPrograma::find($id);
+        if ($modulo) {
+            $modulo->delete();
+            return response()->json(['message' => 'Módulo eliminado correctamente'], 200);
+        }
+        return response()->json(['errors' => 'El modulo no existe'], 404);
     }
 }

@@ -6,6 +6,7 @@ use App\Models\InscripcionCurso;
 use App\Models\Persona;
 use App\Models\Visitas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 class InscripcionCursoController extends Controller
 {
@@ -22,13 +23,23 @@ class InscripcionCursoController extends Controller
         $visit->save();
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $route = Route::currentRouteName();
+        $search = trim($request->input('search'));
+
         $path = request()->path();
         $this->updateVisitCount($path);
         $visitas = Visitas::where('ruta', $path)->first();
 
-        return view('content.pages.personas.pages-persona-inscritos-cursos', ['visitas' => $visitas]);
+        $inscritos = InscripcionCurso::join('persona', 'per_id', 'inscripcion_curso.estudiante')
+            ->where(function ($q) use ($search) {
+                $q->where('persona.per_appm', 'ilike', '%' . $search . '%')
+                    ->orwhere('persona.per_nom', 'ilike', '%' . $search . '%')
+                    ->orwhere('persona.per_ci', 'ilike', '%' . $search . '%');
+            })->where('inscrip_curs_estado', '=', 'true')->paginate(5);
+
+        return view('content.pages.personas.pages-persona-inscritos-cursos', ['inscritos' => $inscritos, 'visitas' => $visitas, 'ruta' => $route, 'busqueda' => $search]);
     }
 
 

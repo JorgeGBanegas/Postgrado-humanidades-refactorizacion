@@ -8,6 +8,7 @@ use App\Models\Visitas;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -27,14 +28,20 @@ class CursoController extends Controller
         $visit->save();
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $route = Route::currentRouteName();
+        $search = trim($request->input('search'));
+
 
         $path = request()->path();
         $this->updateVisitCount($path);
         $visitas = Visitas::where('ruta', $path)->first();
-
-        return view('content.pages.cursos.pages-cursos', ['visitas' => $visitas]);
+        $cursos = Curso::where('curs_nom', 'ilike', '%' . $search . '%')
+            ->orwhere('curs_modalidad', 'ilike', '%' . $search . '%')
+            ->orderBy('curs_id', 'DESC')
+            ->paginate(5);
+        return view('content.pages.cursos.pages-cursos', ['cursos' => $cursos, 'visitas' => $visitas, 'ruta' => $route, 'busqueda' => $search]);
     }
 
     public function create()

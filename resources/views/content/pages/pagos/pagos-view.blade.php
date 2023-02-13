@@ -26,7 +26,7 @@
                 <h6 class="mb-2">Total a pagar: {{ $plan->plan_pago_pagtot }} Bs.</h6>
                 <h6 class="mb-2">Tipo de pago: Plan de Pagos</h6>
 
-                <div class="card" id="lista_pagos">
+                <div id="lista_pagos">
                     <div class="d-flex">
                         <div>
                             <h5 class="card-header">Listado de Pagos</h5>

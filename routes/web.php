@@ -115,3 +115,5 @@ Route::delete('horarios-cursos/delete/{horario}', [HorarioCursoController::class
 /**Gestionar Descuentos */
 Route::resource('descuentos', DescuentosController::class);
 Route::get('descuentos/status/{descuento}', [DescuentosController::class, 'changeStatus'])->name('descuentos.changeStatus');;
+Route::get('descuentos/programa/{programa}', [DescuentosController::class, 'getDiscountByProgram'])->name('descuentos.list');;
+Route::get('descuento/precio', [DescuentosController::class, 'getPrices'])->name('descuento.precio');;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDescuentosRequest;
 use App\Models\Descuento;
+use App\Models\InscripcionPrograma;
 use App\Models\Programa;
 use App\Models\Visitas;
 use Exception;
@@ -108,6 +109,48 @@ class DescuentosController extends Controller
             return redirect()->back()->withErrors(['err' => 'Error de conexion intente mas tarde']);
         } catch (Exception $e) {
             return redirect()->back()->withErrors(['err' => $e->getMessage()]);
+        }
+    }
+
+    public function getDiscountByProgram($nro)
+    {
+        if (is_numeric($nro)) {
+            $descuentos = [];
+            $inscrip = InscripcionPrograma::where('inscrip_program_nro', $nro)->where('inscrip_program_estado', true)->first();
+            if ($inscrip) {
+                $descuentos = Descuento::where('program_id', $inscrip->program->program_id)->where('desc_est', true)->get();
+            } else {
+                return response()->json(['errors' => 'No existe el nro de inscripcion'], 404);
+            }
+            return response()->json(['descuentos' => $descuentos], 200);
+        } else {
+            return response()->json(['errors' => 'El campo de inscripcion debe ser numerico'], 400);
+        }
+    }
+
+    public function getPrices(Request $request)
+    {
+        try {
+            $idDescuento = $request->query('desc');
+            $nroInscripcion = $request->query('inscrip');
+            if (is_numeric($idDescuento)) {
+                $precioAPagar = 0;
+                $precioTotal = 0;
+                if ($idDescuento > 0) {
+                    $des = Descuento::findOrFail($idDescuento);
+                    $precioTotal = $des->programa->program_precio;
+                    $descuento = $precioTotal * ($des->desc_porce / 100);
+                    $precioAPagar = $precioTotal - $descuento;
+                } else {
+                    $inscrip = InscripcionPrograma::findOrFail($nroInscripcion);
+                    $precioTotal = $inscrip->program->program_precio;
+                    $precioAPagar = $inscrip->program->program_precio;
+                }
+                return response()->json(['precioAPagar' => $precioAPagar, 'precioTotal' => $precioTotal], 200);
+            }
+            return response()->json(['errors' => 'El idDescuento debe ser numerico'], 400);
+        } catch (Exception $e) {
+            return response()->json(['errors' => 'No existe el registro'], 404);
         }
     }
 }

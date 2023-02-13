@@ -19,9 +19,7 @@
             <div class="card-body">
                 <form id="form-pago" action="{{ route('pagos.store') }}" method="POST">
                     @csrf
-
-                    @livewire('select-descuentos')
-
+                    @include('content.pages.pagos.select-descuentos')
                     <div class="d-flex" style="margin-top: 20px;">
                         <button type="submit" style="margin: 3px;" class="btn btn-primary">Registrar</button>
                         <a style="margin: 2px;" href="{{ route('pagos.index') }}" class="btn btn-danger">Cancelar</a>

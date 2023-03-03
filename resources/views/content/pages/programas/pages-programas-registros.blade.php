@@ -69,6 +69,21 @@
                         </div>
                     </div>
 
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="basic-default-tipo">Carrera</label>
+                        <div class="col-sm-10">
+                            <select id="program_carrera" name="program_carrera" required class="form-select">
+                                <option value="">Selecionar...</option>
+                                @foreach($carreras as $carrera)
+                                <option value="{{$carrera->carr_id}}">{{$carrera->carr_nom}}</option>
+                                @endforeach
+                            </select>
+                            @error('program_carrera')
+                            <small style="color: red;">{{ $message}}</small>
+                            @enderror
+                        </div>
+                    </div>
+
                     <div>
                         <input type="hidden" name="modulos" id="modulos" value="">
                     </div>

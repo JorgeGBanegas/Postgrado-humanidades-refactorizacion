@@ -35,6 +35,10 @@ class StoreProgramaRequest extends FormRequest
                 'required',
                 Rule::in(["presencial", "semipresencial", "virtual"])
             ],
+            'program_carrera' => [
+                'required',
+                Rule::exists('carrera', 'carr_id'),
+            ],
         ];
     }
 }

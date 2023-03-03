@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProgramaRequest;
+use App\Models\Carrera;
 use App\Models\ModuloPrograma;
 use App\Models\Persona;
 use App\Models\Programa;
@@ -39,11 +40,13 @@ class ProgramaController extends Controller
         $path = request()->path();
         $this->updateVisitCount($path);
         $visitas = Visitas::where('ruta', $path)->first();
-        $programas = Programa::where('program_nom', 'ilike', '%' . $search . '%')
-            ->orwhere('program_tipo', 'ilike', '%' . $search . '%')
-            ->orwhere('program_modalidad', 'ilike', '%' . $search . '%')
-
-            ->paginate(5);
+        $programas = Programa::join('carrera', 'carrera.carr_id', 'programa.program_carrera')
+            ->where(function ($q) use ($search) {
+                $q->where('programa.program_nom', 'ilike', '%' . $search . '%')
+                    ->orwhere('programa.program_tipo', 'ilike', '%' . $search . '%')
+                    ->orwhere('programa.program_modalidad', 'ilike', '%' . $search . '%')
+                    ->orwhere('carrera.carr_nom', 'ilike', '%' . $search . '%');
+            })->paginate(5);
 
         return view('content.pages.programas.pages-programas', ['programas' => $programas, 'visitas' => $visitas, 'ruta' => $route, 'busqueda' => $search]);
     }
@@ -54,8 +57,9 @@ class ProgramaController extends Controller
         $this->updateVisitCount($path);
         $visitas = Visitas::where('ruta', $path)->first();
 
+        $carreras = Carrera::get();
         $docentes = Persona::where('per_tipo', '=', '2')->get();
-        return view('content.pages.programas.pages-programas-registros', ['docentes' => $docentes, 'visitas' => $visitas]);
+        return view('content.pages.programas.pages-programas-registros', ['docentes' => $docentes, 'carreras' => $carreras, 'visitas' => $visitas]);
     }
 
 
@@ -72,6 +76,7 @@ class ProgramaController extends Controller
                 'program_precio' => $request->input('program_precio'),
                 'program_modalidad' => $request->input('program_modalidad'),
                 'program_tipo' => $request->input('program_tipo'),
+                'program_carrera' => $request->input('program_carrera'),
             ]);
 
             $listaDeModulos = json_decode($request->modulos, true);
@@ -121,13 +126,14 @@ class ProgramaController extends Controller
     {
         $programa = Programa::findOrFail($id);
         $docentes = Persona::where('per_tipo', '=', 2)->get();
+        $carreras = Carrera::get();
 
         $path = request()->path();
         $basepath = preg_replace('/\/\d+/', '/*', $path);
         $this->updateVisitCount($basepath);
         $visitas = Visitas::where('ruta', $basepath)->first();
 
-        return view('content.pages.programas.pages-programas-edit', ['programa' => $programa, 'docentes' => $docentes, 'visitas' => $visitas]);
+        return view('content.pages.programas.pages-programas-edit', ['programa' => $programa, 'docentes' => $docentes, 'carreras' => $carreras, 'visitas' => $visitas]);
     }
 
     public function update(Request $request, $id)
@@ -145,6 +151,10 @@ class ProgramaController extends Controller
                 'program_modalidad' => [
                     'required',
                     Rule::in(["presencial", "semipresencial", "virtual"])
+                ],
+                'program_carrera' => [
+                    'required',
+                    Rule::exists('carrera', 'carr_id'),
                 ],
             ]
         )->validate();

@@ -27,6 +27,7 @@
                         <th>Precio</th>
                         <th>Modalidad</th>
                         <th>Tipo</th>
+                        <th>Carrera</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -37,6 +38,7 @@
                         <td>{{ $programa -> program_precio}}</td>
                         <td>{{ $programa -> program_modalidad}}</td>
                         <td>{{ $programa -> program_tipo}}</td>
+                        <td>{{ $programa -> carrera ->carr_nom}}</td>
                         <td>
                             <div class="d-flex">
                                 <a style="margin: 2px;" href="{{route('programas.show', $programa->program_id)}}" class="btn btn-primary btn-sm">Ver</a>

@@ -17,6 +17,7 @@
                 <h5 class="mb-2"><b> Precio : </b> {{$programa->program_precio}} Bs.</h5>
                 <h5 class="mb-2"><b> Modalidad:</b> {{$programa->program_modalidad}}</h5>
                 <h5 class="mb-2"><b> Tipo : </b> {{$programa->program_tipo}}</h5>
+                <h5 class="mb-2"><b> Carrera : </b> {{$programa->carrera->carr_nom}}</h5>
 
                 <!-- Table within card -->
                 <h5 class="mb-4"><b> Modulos </b></h5>

@@ -31,7 +31,6 @@ class Carrera extends Model
 
 	public function programas()
 	{
-		return $this->belongsToMany(Programa::class, 'carrera_programa', 'carrera', 'programa')
-					->withPivot('carr_program_id');
+		return $this->hasMany(Programa::class, 'program_id');
 	}
 }

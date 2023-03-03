@@ -41,7 +41,8 @@ class Programa extends Model
 		'program_nom',
 		'program_precio',
 		'program_modalidad',
-		'program_tipo'
+		'program_tipo',
+		'program_carrera'
 	];
 
 	public function descuentos()
@@ -59,10 +60,9 @@ class Programa extends Model
 		return $this->hasMany(GrupoPrograma::class, 'programa');
 	}
 
-	public function carreras()
+	public function carrera()
 	{
-		return $this->belongsToMany(Carrera::class, 'carrera_programa', 'programa', 'carrera')
-			->withPivot('carr_program_id');
+		return $this->belongsTo(Carrera::class, 'program_carrera');
 	}
 
 	public function certificado_programas()

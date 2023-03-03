@@ -17,6 +17,7 @@ use App\Http\Controllers\EstadisticasControler;
 use App\Http\Controllers\InscripcionController;
 use App\Http\Controllers\HorarioCursoController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CarreraController;
 use App\Http\Controllers\ModuloProgramaController;
 use App\Http\Controllers\HorarioProgramaController;
 use App\Http\Controllers\CertificadoCursoController;
@@ -117,3 +118,6 @@ Route::resource('descuentos', DescuentosController::class);
 Route::get('descuentos/status/{descuento}', [DescuentosController::class, 'changeStatus'])->name('descuentos.changeStatus');;
 Route::get('descuentos/programa/{programa}', [DescuentosController::class, 'getDiscountByProgram'])->name('descuentos.list');;
 Route::get('descuento/precio', [DescuentosController::class, 'getPrices'])->name('descuento.precio');;
+
+/** Gestionar Carreras */
+Route::resource('carreras', CarreraController::class);

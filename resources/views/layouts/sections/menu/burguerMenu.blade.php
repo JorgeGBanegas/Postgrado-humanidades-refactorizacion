@@ -40,8 +40,10 @@
                     <a href="{{route('personas.index')}}" class="dashboard-nav-dropdown-item">Alumno/Docente</a>
                     <a href="{{route('inscripciones.index')}}" class="dashboard-nav-dropdown-item">Inscribir a Programa</a>
                     <a href="{{route('inscripcion-curso.index')}}" class="dashboard-nav-dropdown-item">Inscribir a Curso</a>
+                    <a href="{{route('carreras.index')}}" class="dashboard-nav-dropdown-item">Carrera</a>
                     @elseif(@Auth::user()->hasRole(config('variables.rol_admin_progr')))
                     <a href="{{route('personas.index')}}" class="dashboard-nav-dropdown-item">Docentes</a>
+                    <a href="{{route('carreras.index')}}" class="dashboard-nav-dropdown-item">Carrera</a>
                     @elseif(@Auth::user()->hasRole(config('variables.rol_admin_inscrip')))
                     <a href="{{route('personas.index')}}" class="dashboard-nav-dropdown-item">Alumnos</a>
                     <a href="{{route('inscripciones.index')}}" class="dashboard-nav-dropdown-item">Inscribir a Programa</a>

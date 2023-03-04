@@ -42,25 +42,33 @@ class PersonaController extends Controller
         $listaPersonas = null;
         if ($user->hasRole(config('variables.rol_admin'))) {
             $listaPersonas = Persona::join('tipo_usuario', 'persona.per_tipo', 'tipo_usuario.tipo_us_id')
-                ->where(function ($q) use ($search) {
-                    $q->where('persona.per_appm', 'ilike', '%' . $search . '%')
-                        ->orwhere('persona.per_nom', 'ilike', '%' . $search . '%')
-                        ->orwhere('persona.per_ci', 'ilike', '%' . $search . '%');
-                })->where('per_tipo', '=', 1)->orwhere('per_tipo', '=', 2)->paginate(5);
+                ->where(function ($query) use ($search) {
+                    $query->where('persona.per_nom', 'ilike', '%' . $search . '%')
+                        ->orWhere('persona.per_appm', 'ilike', '%' . $search . '%')
+                        ->orWhere('persona.per_ci', 'ilike', '%' . $search . '%')
+                        ->orWhereRaw("concat_ws(' ', per_nom, per_appm) ilike ?", ['%' . $search . '%']);
+                })
+                ->whereIn('persona.per_tipo', [1, 2])
+                ->paginate(5);
         } else if ($user->hasRole(config('variables.rol_admin_progr'))) {
             $listaPersonas = Persona::join('tipo_usuario', 'persona.per_tipo', 'tipo_usuario.tipo_us_id')
-                ->where(function ($q) use ($search) {
-                    $q->where('persona.per_appm', 'ilike', '%' . $search . '%')
-                        ->orwhere('persona.per_nom', 'ilike', '%' . $search . '%')
-                        ->orwhere('persona.per_ci', 'ilike', '%' . $search . '%');
-                })->where('per_tipo', '=', 2)->paginate(5);
+                ->where(function ($query) use ($search) {
+                    $query->where('persona.per_nom', 'ilike', '%' . $search . '%')
+                        ->orWhere('persona.per_appm', 'ilike', '%' . $search . '%')
+                        ->orWhere('persona.per_ci', 'ilike', '%' . $search . '%')
+                        ->orWhereRaw("concat_ws(' ', per_nom, per_appm) ilike ?", ['%' . $search . '%']);
+                })->whereIn('persona.per_tipo', [2])
+                ->paginate(5);
         } else if ($user->hasRole(config('variables.rol_admin_inscrip'))) {
             $listaPersonas = Persona::join('tipo_usuario', 'persona.per_tipo', 'tipo_usuario.tipo_us_id')
-                ->where(function ($q) use ($search) {
-                    $q->where('persona.per_appm', 'ilike', '%' . $search . '%')
-                        ->orwhere('persona.per_nom', 'ilike', '%' . $search . '%')
-                        ->orwhere('persona.per_ci', 'ilike', '%' . $search . '%');
-                })->where('per_tipo', '=', 1)->paginate(5);
+                ->where(function ($query) use ($search) {
+                    $query->where('persona.per_nom', 'ilike', '%' . $search . '%')
+                        ->orWhere('persona.per_appm', 'ilike', '%' . $search . '%')
+                        ->orWhere('persona.per_ci', 'ilike', '%' . $search . '%')
+                        ->orWhereRaw("concat_ws(' ', per_nom, per_appm) ilike ?", ['%' . $search . '%']);
+                })
+                ->whereIn('persona.per_tipo', [1])
+                ->paginate(5);
         }
         return $listaPersonas;
     }

@@ -84,7 +84,6 @@ class PagoController extends Controller
 
     public function updateEstado($id)
     {
-        dd("dsds");
         $pago = Pago::find($id);
         if ($pago) {
             $pago->pago_estado = true;
